@@ -87,9 +87,11 @@ const TabBar = ({ tabs, activeId, setActive, closeTab }) => {
   );
 };
 
-const TitleBar = ({ activeId }) => {
+const TitleBar = ({ activeId, theme, onToggleTheme }) => {
   const sec = SECTIONS[activeId];
   const crumbs = sec?.crumbs || ["~", "dirvana"];
+  const isDark = (theme || "light") === "dark";
+  const themeIcon = isDark ? "sun" : "moon";
   return (
     <div className="titlebar">
       <div className="traffic"><span className="r" /><span className="y" /><span className="g" /></div>
@@ -104,6 +106,15 @@ const TitleBar = ({ activeId }) => {
       </div>
       <div className="titlebar-actions">
         <button className="icon-btn" title="Search"><Icon name="search" size={14} /></button>
+        <button
+          type="button"
+          className="icon-btn"
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          onClick={onToggleTheme}
+        >
+          <Icon name={themeIcon} size={14} />
+        </button>
         <a className="icon-btn" href="https://github.com/jlkendrick/dirvana" target="_blank" rel="noreferrer" title="GitHub"><Icon name="github" size={14} /></a>
       </div>
     </div>

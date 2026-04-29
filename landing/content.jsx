@@ -53,6 +53,26 @@ const Icon = ({ name, className = "ico", size }) => {
       return <svg {...common}><circle cx="12" cy="12" r="9" /><polygon points="15 9 11 13 9 15 13 11" /></svg>;
     case "key":
       return <svg {...common}><circle cx="8" cy="15" r="4" /><line x1="11" y1="12" x2="20" y2="3" /><line x1="17" y1="6" x2="20" y2="9" /></svg>;
+    case "sun":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="3.5" />
+          <line x1="12" y1="2.5" x2="12" y2="5" />
+          <line x1="12" y1="19" x2="12" y2="21.5" />
+          <line x1="2.5" y1="12" x2="5" y2="12" />
+          <line x1="19" y1="12" x2="21.5" y2="12" />
+          <line x1="4.6" y1="4.6" x2="6.4" y2="6.4" />
+          <line x1="17.6" y1="17.6" x2="19.4" y2="19.4" />
+          <line x1="17.6" y1="6.4" x2="19.4" y2="4.6" />
+          <line x1="4.6" y1="19.4" x2="6.4" y2="17.6" />
+        </svg>
+      );
+    case "moon":
+      return (
+        <svg {...common}>
+          <path d="M20 14.5A7.5 7.5 0 0 1 9.5 4a6.5 6.5 0 1 0 10.5 10.5z" />
+        </svg>
+      );
     default: return null;
   }
 };

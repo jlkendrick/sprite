@@ -2,7 +2,7 @@
 
 **An intelligent directory navigation and command augmentation tool for Zsh**
 
-Dirvana (`dv`) streamlines terminal workflow by providing smart directory navigation with fuzzy matching, intelligent autocompletion, and customizable shortcuts. Navigate to deeply nested directories instantly, execute commands with path completion, and create shortcuts for your most-used commands.
+Dirvana (`dv`) streamlines terminal workflow by providing smart directory navigation with various matching types, intelligent autocompletion, and customizable shortcuts. Navigate to deeply nested directories instantly, execute commands with path completion, and create shortcuts for your most-used commands.
 
 ## ✨ Key Features
 
@@ -28,6 +28,7 @@ curl -fsSL https://jlkendrick.github.io/dirvana/docs/install.sh | bash
 ```
 
 The installer will:
+
 - Download the latest binary to `~/.local/bin`
 - Set up Zsh completion scripts
 - Configure your `.zshrc` automatically
@@ -39,7 +40,7 @@ The installer will:
 
 ### Homebrew
 
-Install via the [`jlkendrick/tap`](https://github.com/jlkendrick/homebrew-tap) Homebrew tap:
+Install via the `[jlkendrick/tap](https://github.com/jlkendrick/homebrew-tap)` Homebrew tap:
 
 ```sh
 brew tap jlkendrick/tap
@@ -339,6 +340,7 @@ dv -- refresh            # Navigate to a directory named "refresh"
 ## ⚙️ Configuration
 
 Dirvana's configuration file is located at:
+
 - **macOS:** `~/Library/Application Support/dirvana/config.json`
 
 ### Configuration Options
@@ -368,31 +370,35 @@ Dirvana's configuration file is located at:
 
 #### Paths
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `init` | Root directory for database scanning | `~/` |
-| `db` | SQLite database location | `~/Library/Application Support/dirvana/dirvana.db` |
+
+| Option | Description                          | Default                                            |
+| ------ | ------------------------------------ | -------------------------------------------------- |
+| `init` | Root directory for database scanning | `~/`                                               |
+| `db`   | SQLite database location             | `~/Library/Application Support/dirvana/dirvana.db` |
+
 
 #### Matching
 
-| Option | Type | Description | Options/Default |
-|--------|------|-------------|-----------------|
-| `max_results` | integer | Maximum completions to show | Default: `10` |
-| `max_history_size` | integer | Maximum history entries to track | Default: `100` |
-| `type` | string | How to match directory names | `exact`, `prefix`, `suffix`, `contains` (default) |
-| `promotion_strategy` | string | How to rank results | `recently_accessed` (default), `frequency_based` |
+
+| Option               | Type    | Description                      | Options/Default                                   |
+| -------------------- | ------- | -------------------------------- | ------------------------------------------------- |
+| `max_results`        | integer | Maximum completions to show      | Default: `10`                                     |
+| `max_history_size`   | integer | Maximum history entries to track | Default: `100`                                    |
+| `type`               | string  | How to match directory names     | `exact`, `prefix`, `suffix`, `contains` (default) |
+| `promotion_strategy` | string  | How to rank results              | `recently_accessed` (default), `frequency_based`  |
+
 
 #### Matching Types
 
-- **`exact`** - Only matches directories with the exact name
-- **`prefix`** - Matches directories starting with the query
-- **`suffix`** - Matches directories ending with the query
-- **`contains`** - Matches directories containing the query (substring match)
+- `**exact**` - Only matches directories with the exact name
+- `**prefix**` - Matches directories starting with the query
+- `**suffix**` - Matches directories ending with the query
+- `**contains**` - Matches directories containing the query (substring match)
 
 #### Promotion Strategies
 
-- **`recently_accessed`** - Prioritizes recently visited directories
-- **`frequency_based`** - Prioritizes frequently visited directories
+- `**recently_accessed**` - Prioritizes recently visited directories
+- `**frequency_based**` - Prioritizes frequently visited directories
 
 #### Exclusions
 
@@ -418,6 +424,7 @@ Specify directories to exclude from the database. Supports four matching pattern
 ### Optimal Root Directory
 
 Choose a root directory that:
+
 - Contains all directories you want to navigate to
 - Isn't too broad (avoid scanning entire filesystem)
 - Excludes system directories
@@ -433,10 +440,10 @@ dv build --root /  # Too many directories, slow performance
 
 ### Matching Type Selection
 
-- **`contains`** (default) - Most flexible, finds directories anywhere in the tree
-- **`prefix`** - Faster, better for consistent naming schemes
-- **`exact`** - Most precise, use when you know exact directory names
-- **`suffix`** - Useful for projects with naming patterns (e.g., `-api`, `-web`)
+- `**contains**` (default) - Most flexible, finds directories anywhere in the tree
+- `**prefix**` - Faster, better for consistent naming schemes
+- `**exact**` - Most precise, use when you know exact directory names
+- `**suffix**` - Useful for projects with naming patterns (e.g., `-api`, `-web`)
 
 ### Effective Shortcuts
 
@@ -469,6 +476,7 @@ dv add mkcd "mkdir -p {} && cd {}"        # Create and enter a new directory
 ## 🏗️ Building from Source
 
 Requirements:
+
 - CMake 3.16+
 - Clang compiler
 - C++20 support
@@ -518,10 +526,10 @@ This project is open source and available under the MIT License.
 ### Permission errors
 
 1. Ensure proper permissions on config directory:
-   ```sh
+  ```sh
    chmod 755 ~/Library/Application\ Support/dirvana
    chmod 644 ~/Library/Application\ Support/dirvana/config.json
-   ```
+  ```
 
 ### Command not found
 

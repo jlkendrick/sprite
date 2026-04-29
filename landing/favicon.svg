@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <linearGradient id="brand-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <!-- Matches landing/styles.css defaults for data-accent="purple" -->
+      <stop offset="0%" stop-color="oklch(0.46 0.16 295)" />
+      <stop offset="100%" stop-color="oklch(0.55 0.16 250)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded gradient square -->
+  <rect x="0" y="0" width="36" height="36" rx="10" fill="url(#brand-bg)" />
+  <!-- Inset highlight border -->
+  <rect x="1" y="1" width="34" height="34" rx="9" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+
+  <!-- Warp mark (same paths as landing/app.jsx), centered & scaled to match .brand-mark -->
+  <g
+    fill="none"
+    stroke="#fff"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    transform="matrix(0.9090909 0 0 0.9090909 0 -2)"
+  >
+    <path d="M5 11 L14 11 L16.5 13.5 L35 13.5 L35 32 L5 32 Z" stroke-width="2" opacity="0.92" />
+    <path d="M11 19 L14 22.5 L11 26" stroke-width="1.5" opacity="0.4" />
+    <path d="M18 19 L21 22.5 L18 26" stroke-width="1.5" opacity="0.7" />
+    <path d="M25 19 L28 22.5 L25 26" stroke-width="1.5" opacity="1" />
+  </g>
+</svg>
+
