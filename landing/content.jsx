@@ -184,7 +184,7 @@ const SECTIONS = {
             <p>Type a fragment. Hit Enter. Or hit Tab for the menu.</p>
             <Code>
               <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv " /><P tok="arg" val="dirv" />{"\n"}
-              <P tok="out" val="→ /Users/you/Code/dirvana\n" />
+              <P tok="out" val="→ /Users/you/Code/dirvana" />{"\n\n"}
               <P tok="prompt" val="dirvana ❯ " /><P tok="cmd" val="dv code " /><P tok="arg" val="src" /><P tok="flag" val="<Enter>" />{"\n"}
               <P tok="out" val="→ code /Users/you/Code/dirvana/src" />
             </Code>
@@ -303,7 +303,7 @@ const SECTIONS = {
         <h3>4 · Configure Zsh</h3>
         <p>Add the following to your <code className="inl">~/.zshrc</code>:</p>
         <Code>
-          <P tok="comment" val="# Dirvana Zsh completion configuration\n" />
+          <P tok="comment" val="# Dirvana Zsh completion configuration" />{"\n"}
           <P tok="cmd" val="fpath=(~/.zsh/completions $fpath)" />{"\n\n"}
           <P tok="cmd" val="zstyle ':completion:*' list-grouped yes" />{"\n"}
           <P tok="cmd" val="zstyle ':completion:*' menu select" />{"\n"}
@@ -311,10 +311,10 @@ const SECTIONS = {
           <P tok="cmd" val="setopt menucomplete" />{"\n"}
           <P tok="cmd" val="setopt autolist" />{"\n\n"}
           <P tok="cmd" val="autoload -Uz compinit && compinit -u" />{"\n\n"}
-          <P tok="comment" val="# Dirvana command handler\n" />
+          <P tok="comment" val="# Dirvana command handler" />{"\n"}
           <P tok="cmd" val="dv() {" />{"\n"}
           <P tok="cmd" val={'  local cmd\n  cmd=$(dv-binary --enter dv "$@")\n  if [[ -n "$cmd" ]]; then eval "$cmd"; else echo "dv-error: No command found for \'$*\'"; fi\n}'} />{"\n\n"}
-          <P tok="comment" val="# Auto-refresh database on terminal start\n" />
+          <P tok="comment" val="# Auto-refresh database on terminal start" />{"\n"}
           <P tok="cmd" val="dv-binary --enter dv refresh &> /dev/null & disown" />
         </Code>
 
@@ -371,8 +371,8 @@ const SECTIONS = {
         <h2>Filesystem drill-in</h2>
         <p>Append <code className="inl">/</code> to any path to bypass the database and browse the live filesystem instead.</p>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv ~/Code/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="    # Lists every entry inside ~/Code/\n" />
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv proj" /><P tok="flag" val="<Tab>" /><P tok="comment" val="        # Database match for 'proj'\n" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv ~/Code/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="    # Lists every entry inside ~/Code/" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv proj" /><P tok="flag" val="<Tab>" /><P tok="comment" val="        # Database match for 'proj'" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv /full/path/to/proj/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="  # ...then drill in with /" />
         </Code>
       </>
@@ -393,17 +393,20 @@ const SECTIONS = {
 
         <h2>Add</h2>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='code "code"' />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='idea "idea"' />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='term "open -a Terminal"' />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'cc "cd {} && claude"'} />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'gitlog "git -C {} log --oneline -10"'} />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'serve "python3 -m http.server 8080 --directory {}"'} />
         </Code>
 
         <h2>Use</h2>
-        <p>Shortcuts work with the same path completion as bare <code className="inl">dv</code>:</p>
+        <p>Shortcuts use the same fuzzy completion as bare <code className="inl">dv</code>. A few bound above, in action:</p>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv code " /><P tok="arg" val="project" /><P tok="flag" val="<Enter>" />   <P tok="comment" val="# code /Users/you/Code/project\n" />
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv idea " /><P tok="arg" val="backend" /><P tok="flag" val="<Enter>" />   <P tok="comment" val="# idea /Users/you/Code/backend\n" />
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv term " /><P tok="arg" val="logs" /><P tok="flag" val="<Tab>" />     <P tok="comment" val="# tab through completions" />
+          <P tok="comment" val="# cd into a project and open Claude Code" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv cc " /><P tok="arg" val="api" /><P tok="flag" val="<Enter>" />{"\n"}
+          <P tok="out" val="→ cd /Users/you/Code/api-server && claude" />{"\n\n"}
+          <P tok="comment" val="# run git log inside a project without cd-ing first" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv gitlog " /><P tok="arg" val="front" /><P tok="flag" val="<Enter>" />{"\n"}
+          <P tok="out" val="→ git -C /Users/you/Code/frontend log --oneline -10" />
         </Code>
 
         <h2>The <code className="inl">{"{}"}</code> placeholder</h2>
@@ -411,20 +414,21 @@ const SECTIONS = {
           Without <code className="inl">{"{}"}</code>, the resolved path is appended to the end of the command. Add <code className="inl">{"{}"}</code> to control exactly where it lands — including using it multiple times.
         </p>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'cc "cd {} && claude"'} />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'gitlog "git -C {} log --oneline -10"'} />{"\n"}
+          <P tok="comment" val="# {} mid-command: path goes where you put it" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'diff "git -C {} diff HEAD"'} />{"\n\n"}
+          <P tok="comment" val="# {} twice: same path in two places" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'mkcd "mkdir -p {} && cd {}"'} />
         </Code>
 
         <h2>Manage</h2>
         <Code>
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv list" />{"\n"}
-          <P tok="out" val="Shortcuts:\n" />
-          <P tok="out" val="code  | code\n" />
-          <P tok="out" val="idea  | idea\n" />
-          <P tok="out" val="term  | open -a Terminal\n\n" />
+          <P tok="out" val="Shortcuts:" />{"\n"}
+          <P tok="out" val="code  | code" />{"\n"}
+          <P tok="out" val="idea  | idea" />{"\n"}
+          <P tok="out" val="term  | open -a Terminal" />{"\n\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv show " /><P tok="arg" val="code" />{"\n"}
-          <P tok="out" val="Shortcut: code | Command: code\n\n" />
+          <P tok="out" val="Shortcut: code | Command: code" />{"\n\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv delete " /><P tok="arg" val="code" />{"\n"}
           <P tok="out" val="Shortcut code deleted" />
         </Code>
@@ -539,10 +543,10 @@ const SECTIONS = {
         <h2>Pick the right root</h2>
         <p>The root directory is the universe Dirvana scans. Make it tight enough to be fast, broad enough to cover your actual work.</p>
         <Code>
-          <P tok="comment" val="# Good choices\n" />
+          <P tok="comment" val="# Good choices" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root ~/Code" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root ~/Documents" />{"\n\n"}
-          <P tok="comment" val="# Less optimal — too many directories, slow performance\n" />
+          <P tok="comment" val="# Less optimal — too many directories, slow performance" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root /" />
         </Code>
 
