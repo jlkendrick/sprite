@@ -159,7 +159,16 @@ const SECTIONS = {
         </div>
 
         <h2>How it feels</h2>
-        <AnimatedTerminal />
+        <div className="anim-term-frame">
+          <span className="anim-term-frame-corner tl" aria-hidden="true" />
+          <span className="anim-term-frame-corner tr" aria-hidden="true" />
+          <span className="anim-term-frame-corner bl" aria-hidden="true" />
+          <span className="anim-term-frame-corner br" aria-hidden="true" />
+          <div className="anim-term-frame-tag">
+            <span className="dot" /> LIVE · autoplay
+          </div>
+          <AnimatedTerminal />
+        </div>
 
         <h3>Continue reading</h3>
         <p>
