@@ -116,7 +116,7 @@ const App = () => {
         <div className="brand">
           <div className="brand-mark"><BrandMark /></div>
           <div>
-            <div className="brand-name">Dir<em>vana</em></div>
+            <div className="brand-name">Sprite</div>
           </div>
           <span className="brand-tag">v1.0.1 · macOS</span>
         </div>
