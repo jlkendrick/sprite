@@ -1,14 +1,14 @@
-// terminal.jsx — Interactive Dirvana simulator dock
+// terminal.jsx — Interactive Sprite simulator dock
 // Depends on: SECTIONS, Icon globals
 
 const COMMANDS_HELP = [
-  { c: "dv <name>",        d: "Quick-nav to the matching tab" },
-  { c: "dv <name><Tab>",   d: "Show completion menu" },
-  { c: "dv ls",            d: "List current directory" },
-  { c: "dv list",          d: "List bound shortcuts" },
-  { c: "dv code <name>",   d: "Open file via 'code' shortcut" },
-  { c: "dv add k cmd",     d: "Add a shortcut (simulated)" },
-  { c: "dv refresh",       d: "Refresh the directory database" },
+  { c: "sp<name>",        d: "Quick-nav to the matching tab" },
+  { c: "sp<name><Tab>",   d: "Show completion menu" },
+  { c: "sp ls",            d: "List current directory" },
+  { c: "sp list",          d: "List bound shortcuts" },
+  { c: "sp code <name>",   d: "Open file via 'code' shortcut" },
+  { c: "sp add k cmd",     d: "Add a shortcut (simulated)" },
+  { c: "sp refresh",       d: "Refresh the directory database" },
   { c: "clear",            d: "Clear terminal" },
   { c: "help",             d: "Show this help" },
 ];
@@ -30,8 +30,8 @@ const matchSections = (q) => {
   return [...exact, ...prefix, ...contains];
 };
 
-const PROMPT = ({ path = "~/dirvana" }) => (
-  <span className="prompt"><span className="at">you</span>@dirvana <span className="path">{path}</span> ❯ </span>
+const PROMPT = ({ path = "~/sprite" }) => (
+  <span className="prompt"><span className="at">you</span>@sprite <span className="path">{path}</span> ❯ </span>
 );
 
 const Terminal = ({ openTab, currentLabel }) => {
@@ -47,7 +47,7 @@ const Terminal = ({ openTab, currentLabel }) => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: "smooth" });
   }, [history, menu]);
 
-  const path = "~/dirvana" + (currentLabel ? "/" + currentLabel.replace(/\.[^.]+$/, "") : "");
+  const path = "~/sprite" + (currentLabel ? "/" + currentLabel.replace(/\.[^.]+$/, "") : "");
 
   const push = (...lines) => setHistory((h) => [...h, ...lines]);
 
@@ -70,9 +70,9 @@ const Terminal = ({ openTab, currentLabel }) => {
       return;
     }
 
-    // dv ...
+    // sp...
     const parts = cmd.split(/\s+/);
-    if (parts[0] !== "dv") {
+    if (parts[0] !== "sp") {
       push({ kind: "out", text: `zsh: command not found: ${parts[0]}  (try \`help\`)` });
       return;
     }
@@ -82,7 +82,7 @@ const Terminal = ({ openTab, currentLabel }) => {
     if (!sub) { push({ kind: "out", text: "→ cd ~  (returned home)" }); return; }
 
     if (sub === "ls") {
-      push({ kind: "out", text: "Contents of ~/dirvana:" });
+      push({ kind: "out", text: "Contents of ~/sprite:" });
       Object.entries(SECTIONS).forEach(([id, s]) => {
         push({ kind: "out", text: `  ${s.label}` });
       });
@@ -104,25 +104,25 @@ const Terminal = ({ openTab, currentLabel }) => {
 
     if (sub === "add") {
       const name = parts[2];
-      if (!name) { push({ kind: "out", text: "usage: dv add <name> <command>" }); return; }
+      if (!name) { push({ kind: "out", text: "usage: sp add <name> <command>" }); return; }
       push({ kind: "out match", text: `✓ Shortcut '${name}' added` });
       return;
     }
 
     if (sub === "code") {
       const q = parts.slice(2).join(" ");
-      if (!q) { push({ kind: "out", text: "usage: dv code <name>" }); return; }
+      if (!q) { push({ kind: "out", text: "usage: sp code <name>" }); return; }
       const m = matchSections(q);
-      if (!m.length) { push({ kind: "out", text: `dv-error: no match for '${q}'` }); return; }
+      if (!m.length) { push({ kind: "out", text: `sp-error: no match for '${q}'` }); return; }
       push({ kind: "out match", text: `→ code  ${m[0].label}` });
       openTab(m[0].id, { focus: true });
       return;
     }
 
-    // Default: dv <fragment>
+    // Default: sp<fragment>
     const q = parts.slice(1).join(" ");
     const m = matchSections(q);
-    if (!m.length) { push({ kind: "out", text: `dv-error: no match for '${q}'` }); return; }
+    if (!m.length) { push({ kind: "out", text: `sp-error: no match for '${q}'` }); return; }
     const best = m[0];
     push({ kind: "out match", text: `→ ${best.label}` });
     openTab(best.id, { focus: true });
@@ -137,21 +137,21 @@ const Terminal = ({ openTab, currentLabel }) => {
     }
     const m = matchSections(q);
     if (!m.length) {
-      push({ kind: "in", text: `dv ${q}` });
+      push({ kind: "in", text: `sp ${q}` });
       push({ kind: "out", text: `(no matches for '${q}')` });
       setInput("");
       return;
     }
     if (m.length === 1) {
       // auto-complete
-      setInput(`dv ${m[0].label}`);
+      setInput(`sp ${m[0].label}`);
       return;
     }
     setMenu({ matches: m, sel: 0, query: q });
   };
 
   const acceptMenu = (item) => {
-    push({ kind: "in", text: `dv ${menu.query || ""}` });
+    push({ kind: "in", text: `sp ${menu.query || ""}` });
     push({ kind: "out match", text: `→ ${item.label}` });
     openTab(item.id, { focus: true });
     setMenu(null);
@@ -183,9 +183,9 @@ const Terminal = ({ openTab, currentLabel }) => {
 
     if (e.key === "Tab") {
       e.preventDefault();
-      // strip "dv " prefix
+      // strip "sp" prefix
       const trimmed = input.trim();
-      if (trimmed.startsWith("dv")) {
+      if (trimmed.startsWith("sp")) {
         const rest = trimmed.slice(2).trim();
         showCompletionMenu(rest);
       } else if (trimmed === "") {
@@ -221,7 +221,7 @@ const Terminal = ({ openTab, currentLabel }) => {
       <div className="term-head">
         <div>
           <Icon name="term" size={11} style={{ verticalAlign: -2, marginRight: 6 }} />
-          INTERACTIVE TERMINAL · simulated dv
+          INTERACTIVE TERMINAL · simulated sp
         </div>
         <div className="hint">
           <span><kbd>Tab</kbd> complete</span>
@@ -264,7 +264,7 @@ const Terminal = ({ openTab, currentLabel }) => {
             onKeyDown={onKey}
             spellCheck={false}
             autoComplete="off"
-            placeholder="try: dv install · dv shor<Tab> · dv ls · help"
+            placeholder="try: sp install · sp shor<Tab> · sp ls · help"
           />
         </div>
       </div>
@@ -285,8 +285,8 @@ const Line = ({ line, path }) => {
 
 function initialHistory() {
   return [
-    { kind: "out", text: "Dirvana 1.0.1 — interactive sandbox. Type `help` for commands." },
-    { kind: "out", text: "Hint: try  dv install  or  dv shor<Tab>  to see fuzzy matching in action." },
+    { kind: "out", text: "Sprite 1.0.1 — interactive sandbox. Type `help` for commands." },
+    { kind: "out", text: "Hint: try  sp install  or  sp shor<Tab>  to see fuzzy matching in action." },
   ];
 }
 
@@ -299,7 +299,7 @@ Object.assign(window, { Terminal });
 const ANIM_SCRIPT = [
   // Scene 1 — Tab → fuzzy menu, cycle, pick
   { kind: "comment", text: "# Tab → fuzzy-match menu. Tab again to cycle, Enter to pick." },
-  { kind: "type", text: "dv proj " },
+  { kind: "type", text: "sp proj " },
   { kind: "menu", items: [
     { label: "projects/",       meta: "~/Code" },
     { label: "my-projects/",    meta: "~/Documents" },
@@ -310,14 +310,14 @@ const ANIM_SCRIPT = [
   { kind: "menuMove", to: 2, hold: 380 },
   { kind: "menuMove", to: 3, hold: 380 },
   { kind: "menuMove", to: 2, hold: 480 },
-  { kind: "enter", inputOverride: "dv proj" },
+  { kind: "enter", inputOverride: "sp proj" },
   { kind: "output", text: "→ ~/Code/projects/project-alpha", className: "match" },
   { kind: "cd", path: "project-alpha" },
   { kind: "wait", ms: 1100 },
 
-  // Scene 2 — bare `dv` returns home
-  { kind: "comment", text: "# bare dv → cd ~" },
-  { kind: "type", text: "dv" },
+  // Scene 2 — bare `sp` returns home
+  { kind: "comment", text: "# bare sp → cd ~" },
+  { kind: "type", text: "sp" },
   { kind: "enter" },
   { kind: "output", text: "→ ~", className: "match" },
   { kind: "cd", path: "~" },
@@ -325,14 +325,14 @@ const ANIM_SCRIPT = [
 
   // Scene 3 — quick-nav uses learned ranking (no Tab, just Enter)
   { kind: "comment", text: "# Enter (no Tab) → quick-nav. Recent picks float to the top." },
-  { kind: "type", text: "dv proj" },
+  { kind: "type", text: "sp proj" },
   { kind: "enter" },
   { kind: "output", text: "→ ~/Code/projects/project-alpha   ★ recent", className: "match" },
   { kind: "cd", path: "project-alpha" },
   { kind: "wait", ms: 1500 },
 
   // Scene 4 — quick reset
-  { kind: "type", text: "dv" },
+  { kind: "type", text: "sp" },
   { kind: "enter" },
   { kind: "output", text: "→ ~", className: "match" },
   { kind: "cd", path: "~" },
@@ -343,8 +343,8 @@ const ANIM_SCRIPT = [
   { kind: "wait", ms: 600 },
 
   // Scene 5 — Tab inside any command resolves fragments to absolute paths
-  { kind: "comment", text: "# Prefix any command with dv. Tab resolves fragments inside it." },
-  { kind: "type", text: "dv cp -r temp" },
+  { kind: "comment", text: "# Prefix any command with sp. Tab resolves fragments inside it." },
+  { kind: "type", text: "sp cp -r temp" },
   { kind: "tabExpand", from: "temp", to: "~/scratch/temp" },
   { kind: "type", text: " proj" },
   { kind: "tabExpand", from: "proj", to: "~/Code/projects/project-alpha" },
@@ -354,13 +354,13 @@ const ANIM_SCRIPT = [
 
   // Scene 6 — bind a shortcut
   { kind: "comment", text: "# Bind a shortcut. {} expands to the matched path." },
-  { kind: "type", text: 'dv add c "cd {} && cursor ."' },
+  { kind: "type", text: 'sp add c "cd {} && cursor ."' },
   { kind: "enter" },
   { kind: "output", text: "✓ shortcut 'c' added", className: "match" },
   { kind: "wait", ms: 1000 },
 
   // Scene 7 — use the new shortcut, editor opens
-  { kind: "type", text: "dv c proj" },
+  { kind: "type", text: "sp c proj" },
   { kind: "enter" },
   { kind: "output", text: "→ cd ~/Code/projects/project-alpha && cursor .", className: "match" },
   { kind: "cd", path: "project-alpha" },
@@ -577,7 +577,7 @@ function AnimatedTerminal() {
     };
 
     (async () => {
-      setLines([{ kind: "out", text: "Dirvana 1.0.1 · autoplay demo" }]);
+      setLines([{ kind: "out", text: "Sprite 1.0.1 · autoplay demo" }]);
       await sleep(700);
       while (!cancelled) {
         for (const ev of ANIM_SCRIPT) {
@@ -613,7 +613,7 @@ function AnimatedTerminal() {
       <div className="anim-term-head">
         <div className="anim-term-head-l">
           <Icon name="term" size={11} className="ico anim-term-icon" />
-          <span>DEMO · dv autoplay</span>
+          <span>DEMO · sp autoplay</span>
         </div>
         <button className="anim-term-replay" onClick={replay} aria-label="Replay">
           <Icon name="refresh" size={11} className="ico" />

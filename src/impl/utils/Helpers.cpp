@@ -5,7 +5,7 @@
 #include <iostream>
 
 // Helper function to return the deepest directory name in a path
-// Ex. get_deepest_dir("/Users/jameskendrick/Code/Projects/dirvana/cpp/src") will return "src"
+// Ex. get_deepest_dir("/Users/jameskendrick/Code/Projects/sprite/cpp/src") will return "src"
 // We return a pair of bool and string to ensure that the path is valid
 std::string get_dir_name(const std::string& path) {
 	size_t pos = path.find_last_of('/');
@@ -160,7 +160,7 @@ std::tuple<bool, std::vector<std::string>, std::vector<Flag>> ArgParsing::proces
 	std::vector<std::string> curr_flag_parts;
 	bool found_flag = false;
 
-	// Known shell/system binary: pass argv through so flags like cp -r are not parsed as Dirvana flags
+	// Known shell/system binary: pass argv through so flags like cp -r are not parsed as Sprite flags
 	const std::string first_arg = argc > 3 ? argv[3] : "";
 	if (!first_arg.empty() && ArgParsing::system_shell_commands.count(first_arg)) {
 		for (int i = 3; i < argc; i++)
@@ -170,7 +170,7 @@ std::tuple<bool, std::vector<std::string>, std::vector<Flag>> ArgParsing::proces
 
 
 
-	// Start from index 3 to skip the program name, call type (--enter or --tab), and "dv"
+	// Start from index 3 to skip the program name, call type (--enter or --tab), and "sp"
 	for (int i = 3; i < argc; i++) {
 		std::string arg = argv[i];
 

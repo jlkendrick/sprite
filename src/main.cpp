@@ -2,8 +2,8 @@
 #include "Handler.h"
 #include "Helpers.h"
 
-#ifndef DIRVANA_VERSION
-#define DIRVANA_VERSION "dev"
+#ifndef SPRITE_VERSION
+#define SPRITE_VERSION "dev"
 #endif
 
 int main(int argc, char* argv[]) {
@@ -11,11 +11,11 @@ int main(int argc, char* argv[]) {
 	// Initialize the database
 	Config config;
 	Database db(config);
-	Handler handler(db, DIRVANA_VERSION);
+	Handler handler(db, SPRITE_VERSION);
 
 	// Need at least 2 arguments: program name and a flag
 	if (argc < 2) {
-		std::cerr << "Usage: " << argv[0] << " [--tab|--enter] dv [command] [path]" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " [--tab|--enter] sp [command] [path]" << std::endl;
 		return 1;
 	}
 
@@ -26,8 +26,8 @@ int main(int argc, char* argv[]) {
 		return handler.handle_tab(argc, argv);
 	}
 
-	// Direct subcommand invocation (e.g. `dv-binary init`) — used before the dv() shell function
-	// is available. Synthesize the `--enter dv` prefix so process_args sees the expected structure.
+	// Direct subcommand invocation (e.g. `sp-binary init`) — used before the sp() shell function
+	// is available. Synthesize the `--enter sp` prefix so process_args sees the expected structure.
 	std::vector<std::string> wrapped_storage;
 	std::vector<char*> wrapped_argv;
 	int effective_argc = argc;
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
 		wrapped_storage.reserve(argc + 2);
 		wrapped_storage.push_back(argv[0]);
 		wrapped_storage.push_back("--enter");
-		wrapped_storage.push_back("dv");
+		wrapped_storage.push_back("sp");
 		for (int i = 1; i < argc; i++) wrapped_storage.push_back(argv[i]);
 		for (auto& s : wrapped_storage) wrapped_argv.push_back(s.data());
 		effective_argc = wrapped_argv.size();

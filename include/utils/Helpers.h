@@ -62,8 +62,8 @@ namespace ArgParsing {
 	static const std::unordered_map<std::string, std::string> raw_flag_to_implied = {
 		{"--", "--[bypass]"}
 	};
-	// First token after "dv": if it matches here, argv is passed through without Dirvana flag parsing
-	// (e.g. cp -r, rm -rf). Omit Dirvana subcommands: build, rebuild, refresh, install, add, delete, list, show.
+	// First token after "sp": if it matches here, argv is passed through without Sprite flag parsing
+	// (e.g. cp -r, rm -rf). Omit Sprite subcommands: build, rebuild, refresh, install, add, delete, list, show.
 	static const std::unordered_set<std::string> system_shell_commands = {
 		"awk", "bash", "brew", "bun", "bunx", "cat", "cd", "chflags", "chmod", "chown", "cp", "curl", "cut",
 		"date", "dd", "diff", "dig", "dirname", "diskutil", "docker", "du", "ed", "env", "ex", "false", "fd",

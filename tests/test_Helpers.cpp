@@ -29,14 +29,14 @@ static tuple<bool, vector<string>, vector<Flag>> parse(vector<string> tokens) {
 }
 
 TEST(ProcessArgs, BasicPath) {
-	auto [ok, cmds, flags] = parse({"dv-binary", "--enter", "dv", "mydir"});
+	auto [ok, cmds, flags] = parse({"sp-binary", "--enter", "sp", "mydir"});
 	EXPECT_TRUE(ok);
 	EXPECT_EQ(cmds, (vector<string>{"mydir"}));
 	EXPECT_TRUE(flags.empty());
 }
 
 TEST(ProcessArgs, MultipleCommands) {
-	auto [ok, cmds, flags] = parse({"dv-binary", "--enter", "dv", "add", "gs", "git status"});
+	auto [ok, cmds, flags] = parse({"sp-binary", "--enter", "sp", "add", "gs", "git status"});
 	EXPECT_TRUE(ok);
 	EXPECT_EQ(cmds, (vector<string>{"add", "gs", "git status"}));
 	EXPECT_TRUE(flags.empty());
@@ -44,7 +44,7 @@ TEST(ProcessArgs, MultipleCommands) {
 
 // Command must precede its flag so process_args can associate them correctly
 TEST(ProcessArgs, FlagAlias) {
-	auto [ok, cmds, flags] = parse({"dv-binary", "--enter", "dv", "build", "-r", "/some/path"});
+	auto [ok, cmds, flags] = parse({"sp-binary", "--enter", "sp", "build", "-r", "/some/path"});
 	EXPECT_TRUE(ok);
 	EXPECT_EQ(cmds, (vector<string>{"build"}));
 	ASSERT_EQ(flags.size(), 1u);
@@ -53,7 +53,7 @@ TEST(ProcessArgs, FlagAlias) {
 }
 
 TEST(ProcessArgs, FullFlagName) {
-	auto [ok, cmds, flags] = parse({"dv-binary", "--enter", "dv", "build", "--root", "/some/path"});
+	auto [ok, cmds, flags] = parse({"sp-binary", "--enter", "sp", "build", "--root", "/some/path"});
 	EXPECT_TRUE(ok);
 	ASSERT_EQ(flags.size(), 1u);
 	EXPECT_EQ(flags[0].flag, "root");
@@ -61,7 +61,7 @@ TEST(ProcessArgs, FullFlagName) {
 }
 
 TEST(ProcessArgs, BypassFlag) {
-	auto [ok, cmds, flags] = parse({"dv-binary", "--enter", "dv", "--", "mydir"});
+	auto [ok, cmds, flags] = parse({"sp-binary", "--enter", "sp", "--", "mydir"});
 	EXPECT_TRUE(ok);
 	EXPECT_TRUE(cmds.empty());
 	ASSERT_EQ(flags.size(), 1u);
@@ -71,7 +71,7 @@ TEST(ProcessArgs, BypassFlag) {
 
 TEST(ProcessArgs, SystemCommandBypass) {
 	// "git" is a known system command — all args are passed through as-is
-	auto [ok, cmds, flags] = parse({"dv-binary", "--enter", "dv", "git", "status"});
+	auto [ok, cmds, flags] = parse({"sp-binary", "--enter", "sp", "git", "status"});
 	EXPECT_TRUE(ok);
 	EXPECT_EQ(cmds, (vector<string>{"git", "status"}));
 	EXPECT_TRUE(flags.empty());

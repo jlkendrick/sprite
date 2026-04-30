@@ -89,7 +89,7 @@ const TabBar = ({ tabs, activeId, setActive, closeTab }) => {
 
 const TitleBar = ({ activeId, theme, onToggleTheme }) => {
   const sec = SECTIONS[activeId];
-  const crumbs = sec?.crumbs || ["~", "dirvana"];
+  const crumbs = sec?.crumbs || ["~", "sprite"];
   const isDark = (theme || "light") === "dark";
   const themeIcon = isDark ? "sun" : "moon";
   return (
@@ -115,7 +115,7 @@ const TitleBar = ({ activeId, theme, onToggleTheme }) => {
         >
           <Icon name={themeIcon} size={14} />
         </button>
-        <a className="icon-btn" href="https://github.com/jlkendrick/dirvana" target="_blank" rel="noreferrer" title="GitHub"><Icon name="github" size={14} /></a>
+        <a className="icon-btn" href="https://github.com/jlkendrick/sprite" target="_blank" rel="noreferrer" title="GitHub"><Icon name="github" size={14} /></a>
       </div>
     </div>
   );

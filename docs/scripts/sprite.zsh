@@ -1,15 +1,15 @@
-# Dirvana shell integration
+# Sprite shell integration
 # Source this file from your ~/.zshrc:
-#   source "$(brew --prefix)/etc/dirvana.zsh"
+#   source "$(brew --prefix)/etc/sprite.zsh"
 
-dv() {
+sp() {
   local cmd
-  cmd=$(dv-binary --enter dv "$@")
+  cmd=$(sp-binary --enter sp "$@")
   if [[ -n "$cmd" ]]; then
     eval "$cmd"
   else
-    echo "dv-error: No command found for '$*'"
+    echo "sp-error: No command found for '$*'"
   fi
 }
 
-dv-binary --enter dv refresh &> /dev/null & disown
+sp-binary --enter sp refresh &> /dev/null & disown

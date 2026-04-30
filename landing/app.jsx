@@ -55,7 +55,7 @@ const App = () => {
   // tabs: array of section ids; activeId: which is shown
   const [tabs, setTabs] = useState(["overview"]);
   const [activeId, setActiveId] = useState("overview");
-  const [expanded, setExpanded] = useState({ _dirvana: true, _features: true, _install: true });
+  const [expanded, setExpanded] = useState({ _sprite: true, _features: true, _install: true });
 
   // apply theme + accent
   useEffect(() => {

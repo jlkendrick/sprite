@@ -1,5 +1,5 @@
 --------------------------------------------------------- TODO ------------------------------------------------------
-1. (done) When dv + 'partial' is 'enter'-ed, generate completions and cd into the first match. If there are none, say so.
+1. (done) When sp+ 'partial' is 'enter'-ed, generate completions and cd into the first match. If there are none, say so.
 	- Essentially a way to bypass the 'tab' part in 'tab'-ing to get the completion, and then 'enter'-ing to cd into the first match.
 2. (done) Add new version of RecentlyAccessedCache that uses the standard library list.
 3. (done) Move argument parsing out of the Zsh function and into the C++ tool
@@ -16,17 +16,17 @@
 	 	 path from the Entry but the frequency count is a member of the Entry.
 7. (done) Stop being stubborn and migrate to SQLMate.
 8. (done) Not sure if this is currently implemented but if no match is found, just try to 'cd' into the passed dirname
-	- This will allow 'dv' to replace part of 'cd'
+	- This will allow 'sp' to replace part of 'cd'
 9. (done) Priotitize exact matches in the rankings for non-exact directory matches
-	- Ex. Calling 'dv util' should not come back with 'cd 'something/utils' over 'something/else/util' even if
+	- Ex. Calling 'sp util' should not come back with 'cd 'something/utils' over 'something/else/util' even if
 		'something/utils' ranks higher overall
 	- Maybe consider making this a configuration option in case this is not a universally desired behavior
 10. (done) Support argument to refresh that starts the recursive filesystem search from a specified directory
-	- This can, and should, support the native 'dv' autocomplete
+	- This can, and should, support the native 'sp' autocomplete
 11. Now that 10 is done, we would like to update the init_path in the config file based on the root dir that was used during installation
-12. (?) If 'dv' is used with a directory name that is an immediate child of the current working directory, just 'cd' into it
-	- Ex. If we are in '/Code/Projects' and we call 'dv dirvana', then we should not even try to autocomplete and possibly jump
-		to a different directory. Instead, we assume that the user intention is to simply 'cd' into 'Code/Projects/dirvana'
+12. (?) If 'sp' is used with a directory name that is an immediate child of the current working directory, just 'cd' into it
+	- Ex. If we are in '/Code/Projects' and we call 'sp sprite', then we should not even try to autocomplete and possibly jump
+		to a different directory. Instead, we assume that the user intention is to simply 'cd' into 'Code/Projects/sprite'
 	- Not sure if we should do this one, maybe just rely on 'cd' for this
 13. Provide flags that can be provided in the command line to override the current configurations for only that command.
 
@@ -38,22 +38,22 @@ Arguments that can be passed to the program:
 The only thing we do here is:
 	1) Expect the partial path as the last argument
 	2) Query the DirectoryCompleter using the partial path
-	3) Append matches to the end of the commands that came after "dv" and before the partial path
-In most cases, this handles calls like "dv-binary dv dirvana" which would be processed like
-	1) The last argument (the partial) is "dirvana"
-	2) The only match is "/path/to/dirvana"
-	3) Append matches to "" since there is nothing between "dv" and "dirvana" in the arguments so "compadd" "/path/to/dirvana"
+	3) Append matches to the end of the commands that came after "sp" and before the partial path
+In most cases, this handles calls like "sp-binary sp sprite" which would be processed like
+	1) The last argument (the partial) is "sprite"
+	2) The only match is "/path/to/sprite"
+	3) Append matches to "" since there is nothing between "sp" and "sprite" in the arguments so "compadd" "/path/to/sprite"
 However, we want this to also support:
-If this is called with "dirvana-binary -tab dv code dirvana", then
-	1) The partial path is "dirvana"
-	2) The only match is "/path/to/dirvana"
-  3) Notice "code" is an extra command between "dv" and "dirvana" so what we "compadd" is "code /path/to/dirvana"
+If this is called with "sp-binary -tab sp code sprite", then
+	1) The partial path is "sprite"
+	2) The only match is "/path/to/sprite"
+  3) Notice "code" is an extra command between "sp" and "sprite" so what we "compadd" is "code /path/to/sprite"
 That way, when Zsh fills the completion, what is displayed in the command line goes from
-	"dv code dirvana" --> "dv code /path/to/dirvana" 
-which can then we handled by the _dv enter function as described below.
+	"sp code sprite" --> "sp code /path/to/sprite" 
+which can then we handled by the _sp enter function as described below.
 
 ---------------- -enter flag --------------------
--enter means the binary was called from a enter key press (the _dv enter function)
+-enter means the binary was called from a enter key press (the _sp enter function)
 
 Terminology:
 	- Partial: the deepest name of the directory, for example the partial of "~/absolte/path/to/dirname" is "dirname"
@@ -72,7 +72,7 @@ What we do here is:
 		iii) a full path with a preceeding command that we need just to execute (likely came from --tab complete)
 		iiii) a partial with a preceeding command that we need to execute using the first match (if there is one) (quick-nav + nested command feature)
 	To indentify what steps to take:
-	4) Check if the number of arguments after "dv" is 1
+	4) Check if the number of arguments after "sp" is 1
 		4a) If so, go into step 5) with the last and only argument being the path (enable cases i and ii)
 		4b) If not, then we are dealing with a command so add it to the "current_command" (enable cases iii and iiii) 
 				and go into step 5) with the last argument being the path
@@ -89,44 +89,44 @@ Summary:
 	Case iiii = 4b + 5b + 6b
 
 ---------------- Examples --------------------
-Suppose we are in a terminal session located in ~/Code and the path ~/Code/Projects/dirvana exists
+Suppose we are in a terminal session located in ~/Code and the path ~/Code/Projects/sprite exists
 Here are some examples of the desired control flow:
-	These will follow the format: (command executed in terminal) --> (command executed in _dv() tab script or dv() enter script) --> (command or completions generated by C++ program)
+	These will follow the format: (command executed in terminal) --> (command executed in _sp() tab script or sp() enter script) --> (command or completions generated by C++ program)
 
 	----------------- -tab -----------------
 	- Normal tab complete
-		"dv dirvana" + <tab> 
-		--> "dirvana-binary -tab dv dirvana"
-		--> (print out COMPLETIONS ~/Code/Projects/dirvana to be handled by compadd)
+		"sp sprite" + <tab> 
+		--> "sp-binary -tab sp sprite"
+		--> (print out COMPLETIONS ~/Code/Projects/sprite to be handled by compadd)
 		Explanation: There are no extra commands so we just query and return raw matches
 
 	- Normal tab complete with nested command
-		"dv code dirvana" + <tab> 
-		--> "dirvana-binary -tab dv code dirvana" 
-		--> (print out COMPLETIONS code ~/Code/Projects/dirvana to be handled by compadd)
+		"sp code sprite" + <tab> 
+		--> "sp-binary -tab sp code sprite" 
+		--> (print out COMPLETIONS code ~/Code/Projects/sprite to be handled by compadd)
 		Explanation: There is an extra command so we query and return the command concatenated with the raw matches
 
 	---------------- -enter ----------------
 	- i, 'cd' command generation for full path
-		"dv ~/Code/Projects/dirvana" + <enter>
-		--> "dirvana-binary -enter dv ~/Code/Projects/dirvana" 
-		--> (print out COMMAND "cd ~/Code/Projects/dirvana" to be executed by caller)
+		"sp ~/Code/Projects/sprite" + <enter>
+		--> "sp-binary -enter sp~/Code/Projects/sprite" 
+		--> (print out COMMAND "cd ~/Code/Projects/sprite" to be executed by caller)
 		Explanation: We notice the path is a full path so we just create command with 'cd' since there is no nested command
 
 	- ii, quick-nav for partial
-		"dv dirvana" + <enter>
-		--> "dirvana-binary -enter dv dirvana" 
-		--> (print out COMMAND "cd ~/Code/Projects/dirvana" to be executed by caller)
+		"sp sprite" + <enter>
+		--> "sp-binary -enter sp sprite" 
+		--> (print out COMMAND "cd ~/Code/Projects/sprite" to be executed by caller)
 		Explanation: We notice the path is a partial path so we query for first match and 'cd' with that match
 
 	- iii, specified command generation for full-path
-		"dv code ~/Code/Projects/dirvana" + <enter>
-		--> "dirvana-binary -enter dv code ~/Code/Projects/dirvana"
+		"sp code ~/Code/Projects/sprite" + <enter>
+		--> "sp-binary -enter sp code ~/Code/Projects/sprite"
 		--> (print out COMMAND "cd ~/Code/Projects" to be executed by caller)
 		Explanation: We notice the path is a full path so we format the command using the nested "code" command and the full path
 
 	- iiii, specified command generation + quick-nav partial
-		"dv code dirvana" + <enter>
-		--> "dirvana-binary -enter dv dirvana" 
-		--> (print out COMMAND "cd ~/Code/Projects/dirvana" to be executed by caller)
+		"sp code sprite" + <enter>
+		--> "sp-binary -enter sp sprite" 
+		--> (print out COMMAND "cd ~/Code/Projects/sprite" to be executed by caller)
 		Explanation: We notice the path is a partial path so we format the command using the nested "code" command and the first match for the partial

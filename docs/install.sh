@@ -5,29 +5,29 @@ set -e
 # Determine the platform
 OS=$(uname -s)
 if [[ "$OS" != "Darwin" ]]; then
-  echo "Dirvana is only supported on macOS."
+  echo "Sprite is only supported on macOS."
   exit 1
 fi
 ARCH=$(uname -m)
 if [[ "$ARCH" != "arm64" ]]; then
-  echo "Dirvana only supports Apple Silicon (arm64). Intel Macs are not supported."
+  echo "Sprite only supports Apple Silicon (arm64). Intel Macs are not supported."
   exit 1
 fi
 
 # Resolve the latest release version
-VERSION=$(curl -fsSL https://api.github.com/repos/jlkendrick/dirvana/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+VERSION=$(curl -fsSL https://api.github.com/repos/jlkendrick/sprite/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
 if [[ -z "$VERSION" ]]; then
   echo "❌ Could not determine latest release version."
   exit 1
 fi
 
-echo "Installing Dirvana $VERSION"
+echo "Installing Sprite $VERSION"
 
 # Download the binary with backup handling
-echo "⏸️ Downloading Dirvana binary..."
-BINARY_URL="https://github.com/jlkendrick/dirvana/releases/download/${VERSION}/dv-binary-arm64"
+echo "⏸️ Downloading Sprite binary..."
+BINARY_URL="https://github.com/jlkendrick/sprite/releases/download/${VERSION}/sp-binary-arm64"
 BINARY_PATH="$HOME/.local/bin"
-BINARY_FILE="$BINARY_PATH/dv-binary"
+BINARY_FILE="$BINARY_PATH/sp-binary"
 
 # Create directory if it doesn't exist
 mkdir -p "$BINARY_PATH"
@@ -41,7 +41,7 @@ fi
 # Download new binary
 if curl -sSL -o "$BINARY_FILE" "$BINARY_URL"; then
   chmod +x "$BINARY_FILE"
-  echo "✅ Dirvana binary installed to $BINARY_FILE"
+  echo "✅ Sprite binary installed to $BINARY_FILE"
   # Remove backup if download was successful
   if [ -f "${BINARY_FILE}.backup" ]; then
     rm "${BINARY_FILE}.backup"
@@ -59,9 +59,9 @@ fi
 
 # Similar approach for tab completion script
 echo "⏸️ Installing tab completion..."
-TAB_URL="https://raw.githubusercontent.com/jlkendrick/dirvana/main/docs/scripts/_dv"
+TAB_URL="https://raw.githubusercontent.com/jlkendrick/sprite/main/docs/scripts/_sp"
 TAB_PATH="$HOME/.zsh/completions"
-TAB_FILE="$TAB_PATH/_dv"
+TAB_FILE="$TAB_PATH/_sp"
 
 mkdir -p "$TAB_PATH"
 
@@ -97,7 +97,7 @@ TEMP_ZSHRC="$HOME/.zshrc.tmp"
 
 # Define the required lines
 REQUIRED_LINES=$(cat <<EOF
-# Begin Dirvana Zsh completion configuration
+# Begin Sprite Zsh completion configuration
 fpath=($TAB_PATH \$fpath)
 
 zstyle ':completion:*' list-grouped yes
@@ -108,13 +108,13 @@ setopt menucomplete
 setopt autolist
   
 autoload -Uz compinit && compinit -u
-# End Dirvana Zsh completion configuration
+# End Sprite Zsh completion configuration
 
 EOF
 )
 
 # Add missing lines to the top of .zshrc
-if ! grep -q "# Begin Dirvana Zsh completion configuration" "$ZSHRC"; then
+if ! grep -q "# Begin Sprite Zsh completion configuration" "$ZSHRC"; then
   (echo "$REQUIRED_LINES"; cat "$ZSHRC") > "$TEMP_ZSHRC"
   mv "$TEMP_ZSHRC" "$ZSHRC"
   echo "✅ Added required configurations to $ZSHRC"
@@ -123,30 +123,30 @@ else
 fi
 
 # Add enter handler function to .zshrc
-if ! grep -q "dv() {" "$ZSHRC"; then
+if ! grep -q "sp() {" "$ZSHRC"; then
   cat << 'EOF' >> "$ZSHRC"
 
-# Dirvana Enter Handler
-dv() {
+# Sprite Enter Handler
+sp() {
   local cmd
-  cmd=$(dv-binary --enter dv "$@")
+  cmd=$(sp-binary --enter sp "$@")
 
   if [[ -n "$cmd" ]]; then
     eval "$cmd"
   else
-    echo "dv-error: No command found for '$*'"
+    echo "sp-error: No command found for '$*'"
   fi
 }
 EOF
-  echo "✅ Added dv() function to $ZSHRC"
+  echo "✅ Added sp() function to $ZSHRC"
 fi
 
 # Add automatic refresh on boot
-if ! grep -q "# Dirvana automatic refresh on boot" "$ZSHRC"; then
+if ! grep -q "# Sprite automatic refresh on boot" "$ZSHRC"; then
   {
     echo ""
-    echo "# Dirvana automatic refresh on boot"
-    echo "dv-binary --enter dv refresh &> /dev/null & disown"
+    echo "# Sprite automatic refresh on boot"
+    echo "sp-binary --enter sp refresh &> /dev/null & disown"
   } >> "$ZSHRC"
   echo "✅ Added automatic refresh on boot to $ZSHRC"
 fi
@@ -162,11 +162,11 @@ if ! grep -q "# Add ~/.local/bin to PATH" "$HOME/.zshrc"; then
 fi
 
 # Preemptively create the necessary directories
-mkdir -p "$HOME/Library/Application Support/dirvana"
-echo "✅ Created necessary directory for Dirvana"
+mkdir -p "$HOME/Library/Application Support/sprite"
+echo "✅ Created necessary directory for Sprite"
 
 # Run rebuild command to initialize the database
-echo "Please specify a root directory to initialize Dirvana from."
+echo "Please specify a root directory to initialize Sprite from."
 echo "You can use a relative path, absolute path, or ~ for your home directory."
 read -p "Root directory (default: $HOME): " root_dir < /dev/tty
 
@@ -193,12 +193,12 @@ fi
 # Get clean absolute path (resolves symlinks and removes any trailing slash)
 abs_root_dir=$(cd "$root_dir_expanded" && pwd)
 
-echo "⏸️ Initializing Dirvana database from '$abs_root_dir'..."
-if ! $BINARY_FILE --enter dv build --root "$abs_root_dir" &> /dev/null; then
-  echo "❌ Failed to initialize Dirvana database for root '$abs_root_dir'"
+echo "⏸️ Initializing Sprite database from '$abs_root_dir'..."
+if ! $BINARY_FILE --enter sp build --root "$abs_root_dir" &> /dev/null; then
+  echo "❌ Failed to initialize Sprite database for root '$abs_root_dir'"
   exit 1
 fi
-echo "✅ Dirvana database initialized successfully"
+echo "✅ Sprite database initialized successfully"
 
 echo "Installation complete! Please restart your terminal to apply the changes."
 exit 0

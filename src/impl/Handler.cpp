@@ -8,7 +8,7 @@
 Handler::Handler(Database& db, const std::string& version) : db(db), version(version) {}
 
 int Handler::handle_tab(int argc, char* argv[]) {
-	// Need at least 4 arguments: dv_binary, --tab, dv, partial_path
+	// Need at least 4 arguments: sp_binary, --tab, sp, partial_path
 	if (argc < 4) {
 		std::cerr << "Tab completion requires at least a partial path" << std::endl;
 		return 1;
@@ -32,7 +32,7 @@ int Handler::handle_tab(int argc, char* argv[]) {
 	// Get matches for the partial path
 	std::vector<std::string> matches = db.get_paths_table().query(partial);
 	
-	// Check if there are commands/inputs between "dv" and the partial path
+	// Check if there are commands/inputs between "sp" and the partial path
 	std::string prefix = "";
 	for (int i = 3; i < argc - 1; i++) {
 		if (i > 3) prefix += " ";
@@ -57,7 +57,7 @@ int Handler::handle_enter(std::vector<std::string>& commands, std::vector<Flag>&
 
 	// Check if a subcommand-less flag was passed (e.g. "--version" ("-v"))
 	if (ArgParsing::has_flag(flags, "version")) {
-		std::cout << "echo Dirvana version " << version << std::endl;
+		std::cout << "echo Sprite version " << version << std::endl;
 		return 0;
 	}
 
@@ -148,7 +148,7 @@ int Handler::handle_enter(std::vector<std::string>& commands, std::vector<Flag>&
 	db.get_paths_table().access(path);
 	
 	// Now we need to assemble the final command to output.
-	// Arguments look something like: dv-binary --enter dv [...] [path]
+	// Arguments look something like: sp-binary --enter sp [...] [path]
 	std::string prefix = "";
 	if (commands.size() > 1) {
 		// Build the prefix from all arguments except the last one (and any "--" delimiters)
@@ -200,10 +200,10 @@ int Handler::Subcommands::handle_install(Handler& handler, std::vector<std::stri
 		version = handler.version;
 	// Curl command to download and run the installation script
 	std::string curl_command = std::format(
-		"curl -fsSL https://raw.githubusercontent.com/jameskendrick/dirvana/{}/docs/install.sh | bash",
+		"curl -fsSL https://raw.githubusercontent.com/jlkendrick/sprite/{}/docs/install.sh | bash",
 		version.c_str()
 	);
-	std::cout << "echo Updating Dirvana to version " << version << "..." << std::endl;
+	std::cout << "echo Updating Sprite to version " << version << "..." << std::endl;
 	std::cout << "echo Running: " << curl_command << std::endl;
 	return 0;
 }
@@ -253,14 +253,14 @@ int Handler::Subcommands::handle_init(Handler& handler, std::vector<std::string>
 	std::string exe_path = get_executable_path();
 	bool is_local_bin = exe_path.find(home + "/.local/bin/") != std::string::npos;
 
-	// Warn if another dv-binary earlier on PATH will shadow this one — common when
+	// Warn if another sp-binary earlier on PATH will shadow this one — common when
 	// switching between the curl|bash installer (~/.local/bin) and Homebrew.
-	std::string first_on_path = find_first_on_path("dv-binary");
+	std::string first_on_path = find_first_on_path("sp-binary");
 	if (!first_on_path.empty() && !exe_path.empty() && first_on_path != exe_path) {
-		std::cerr << "Warning: another dv-binary is earlier on your PATH and will be used instead of this one." << std::endl;
+		std::cerr << "Warning: another sp-binary is earlier on your PATH and will be used instead of this one." << std::endl;
 		std::cerr << "  Running:    " << exe_path << std::endl;
 		std::cerr << "  Shadowed by: " << first_on_path << std::endl;
-		std::cerr << "Remove the shadowing binary (e.g. `rm " << first_on_path << " && hash -r`) so `dv-binary` resolves to this install." << std::endl;
+		std::cerr << "Remove the shadowing binary (e.g. `rm " << first_on_path << " && hash -r`) so `sp-binary` resolves to this install." << std::endl;
 	}
 
 	// Read existing .zshrc to avoid duplicating any block
@@ -271,21 +271,21 @@ int Handler::Subcommands::handle_init(Handler& handler, std::vector<std::string>
 			zshrc_content = std::string((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 	}
 
-	// Always install _dv and add the completion block — Homebrew adds its own _dv too but
+	// Always install _sp and add the completion block — Homebrew adds its own _sp too but
 	// compinit picks the first match in fpath, so duplication is harmless. Skipping this on
 	// Homebrew was a mistake: Homebrew adds to fpath but doesn't run compinit.
 	std::string completions_dir = home + "/.zsh/completions";
 	std::error_code ec;
 	std::filesystem::create_directories(completions_dir, ec);
 
-	std::string completion_file = completions_dir + "/_dv";
+	std::string completion_file = completions_dir + "/_sp";
 	if (!std::filesystem::exists(completion_file)) {
 		std::ofstream out(completion_file);
-		out << R"(#compdef dv
+		out << R"(#compdef sp
 
-_dv() {
+_sp() {
   local completions
-  completions=("${(@f)$(dv-binary --tab "${words[@]}")}")
+  completions=("${(@f)$(sp-binary --tab "${words[@]}")}")
 
   compadd -S '' -Q -U -V 'Available Options' -- "${completions[@]}"
 }
@@ -293,8 +293,8 @@ _dv() {
 	}
 
 	std::string completion_block;
-	if (zshrc_content.find("# Begin Dirvana Zsh completion configuration") == std::string::npos) {
-		completion_block = "# Begin Dirvana Zsh completion configuration\n"
+	if (zshrc_content.find("# Begin Sprite Zsh completion configuration") == std::string::npos) {
+		completion_block = "# Begin Sprite Zsh completion configuration\n"
 			"fpath=(" + completions_dir + " $fpath)\n"
 			"\n"
 			"zstyle ':completion:*' list-grouped yes\n"
@@ -305,7 +305,7 @@ _dv() {
 			"setopt autolist\n"
 			"\n"
 			"autoload -Uz compinit && compinit -u\n"
-			"# End Dirvana Zsh completion configuration\n\n";
+			"# End Sprite Zsh completion configuration\n\n";
 	}
 
 	// Prepend the completion block so compinit runs before any later completion config
@@ -325,20 +325,20 @@ _dv() {
 		append_block += "\n# Add ~/.local/bin to PATH\nexport PATH=\"$HOME/.local/bin:$PATH\"\n";
 	}
 
-	// Append the dv() function and auto-refresh if not already present
-	if (zshrc_content.find("dv-binary --enter dv") == std::string::npos) {
+	// Append the sp() function and auto-refresh if not already present
+	if (zshrc_content.find("sp-binary --enter sp") == std::string::npos) {
 		append_block += R"(
-# Dirvana
-dv() {
+# Sprite
+sp() {
   local cmd
-  cmd=$(dv-binary --enter dv "$@")
+  cmd=$(sp-binary --enter sp "$@")
   if [[ -n "$cmd" ]]; then
     eval "$cmd"
   else
-    echo "dv-error: No command found for '$*'"
+    echo "sp-error: No command found for '$*'"
   fi
 }
-dv-binary --enter dv refresh &> /dev/null & disown
+sp-binary --enter sp refresh &> /dev/null & disown
 )";
 	}
 
@@ -361,7 +361,7 @@ dv-binary --enter dv refresh &> /dev/null & disown
 	std::cerr << "Database initialized from " << init_path << std::endl;
 	std::cerr << "Run: source ~/.zshrc" << std::endl;
 
-	// Emit a no-op on stdout so the dv() shell wrapper's eval succeeds silently
+	// Emit a no-op on stdout so the sp() shell wrapper's eval succeeds silently
 	std::cout << ":" << std::endl;
 	return 0;
 }
@@ -372,7 +372,7 @@ int Handler::Subcommands::handle_add(Handler& handler, std::vector<std::string>&
 
 	// Validate the arguments passed to add
 	if (commands.size() < 3) {
-		std::cerr << "Usage dv add [shortcut] [command]" << std::endl;
+		std::cerr << "Usage sp add [shortcut] [command]" << std::endl;
 		return 1;
 	}
 
@@ -401,7 +401,7 @@ int Handler::Subcommands::handle_delete(Handler& handler, std::vector<std::strin
 	// None for now
 
 	if (commands.size() != 2) {
-		std::cerr << "Usage dv delete [shortcut]" << std::endl;
+		std::cerr << "Usage sp delete [shortcut]" << std::endl;
 		return 1;
 	}
 
@@ -436,7 +436,7 @@ int Handler::Subcommands::handle_show(Handler& handler, std::vector<std::string>
 	// Relevant flags for show: none for now
 	
 	if (commands.size() != 2) {
-		std::cerr << "Usage dv show [shortcut]" << std::endl;
+		std::cerr << "Usage sp show [shortcut]" << std::endl;
 		return 1;
 	}
 

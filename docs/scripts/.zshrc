@@ -16,4 +16,4 @@ autoload -Uz compinit && compinit
 # ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄ ⌄  #
 # The other content of your existing .zshrc file #
 
-dv-binary -enter dv refresh &> /dev/null & disown
+sp-binary -enter sp refresh &> /dev/null & disown

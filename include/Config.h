@@ -46,12 +46,12 @@ public:
 
 	
 private:
-	std::string config_path = (std::getenv("HOME") != nullptr ? std::getenv("HOME") : "")+ std::string("/Library/Application Support/dirvana/config.json");
+	std::string config_path = (std::getenv("HOME") != nullptr ? std::getenv("HOME") : "")+ std::string("/Library/Application Support/sprite/config.json");
 	json config;
 	json default_config = {
 		{"paths", {
 			{"init", (std::getenv("HOME") != nullptr ? std::getenv("HOME") : "") + std::string("/")},
-			{"db", (std::getenv("HOME") != nullptr ? std::getenv("HOME") : "") + std::string("/Library/Application Support/dirvana/dirvana.db")}
+			{"db", (std::getenv("HOME") != nullptr ? std::getenv("HOME") : "") + std::string("/Library/Application Support/sprite/sprite.db")}
 		}},
 		{"matching", {
 			{"max_results", 10},

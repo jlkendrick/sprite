@@ -20,16 +20,16 @@ jobs:
       - name: Build
         run: |
           VERSION_CLEAN="${GITHUB_REF_NAME#v}"
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DDIRVANA_VERSION="${VERSION_CLEAN}"
-          cmake --build build --target dv-binary
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSPRITE_VERSION="${VERSION_CLEAN}"
+          cmake --build build --target sp-binary
 
       - name: Stage binary
-        run: mv build/dv-binary dv-binary-arm64
+        run: mv build/sp-binary sp-binary-arm64
 
       - uses: actions/upload-artifact@v4
         with:
-          name: dv-binary-arm64
-          path: dv-binary-arm64
+          name: sp-binary-arm64
+          path: sp-binary-arm64
 
   release:
     needs: build
@@ -46,9 +46,9 @@ jobs:
       - name: Create GitHub release
         run: |
           gh release create ${{ github.ref_name }} \
-            dv-binary-arm64 \
+            sp-binary-arm64 \
             --generate-notes \
-            --title "Dirvana ${{ github.ref_name }}"
+            --title "Sprite ${{ github.ref_name }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,16 +61,16 @@ jobs:
           HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
           VERSION=${{ github.ref_name }}
-          SHA=$(curl -sL "https://github.com/jlkendrick/dirvana/archive/refs/tags/${VERSION}.tar.gz" | shasum -a 256 | awk '{print $1}')
+          SHA=$(curl -sL "https://github.com/jlkendrick/sprite/archive/refs/tags/${VERSION}.tar.gz" | shasum -a 256 | awk '{print $1}')
 
           git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/jlkendrick/homebrew-tap.git tap
           mkdir -p tap/Formula
 
-          cat > tap/Formula/dirvana.rb << FORMULA
-          class Dirvana < Formula
+          cat > tap/Formula/sprite.rb << FORMULA
+          class Sprite < Formula
             desc "Intelligent directory navigation and command augmentation tool for Zsh"
-            homepage "https://github.com/jlkendrick/dirvana"
-            url "https://github.com/jlkendrick/dirvana/archive/refs/tags/${VERSION}.tar.gz"
+            homepage "https://github.com/jlkendrick/sprite"
+            url "https://github.com/jlkendrick/sprite/archive/refs/tags/${VERSION}.tar.gz"
             sha256 "${SHA}"
             license "MIT"
 
@@ -80,19 +80,19 @@ jobs:
             def install
               system "cmake", "-S", ".", "-B", "build",
                      "-DCMAKE_BUILD_TYPE=Release",
-                     "-DDIRVANA_VERSION=#{version}",
+                     "-DSPRITE_VERSION=#{version}",
                      *std_cmake_args
-              system "cmake", "--build", "build", "--target", "dv-binary"
-              bin.install "build/dv-binary"
-              zsh_completion.install "docs/scripts/_dv"
-              etc.install "docs/scripts/dirvana.zsh"
+              system "cmake", "--build", "build", "--target", "sp-binary"
+              bin.install "build/sp-binary"
+              zsh_completion.install "docs/scripts/_sp"
+              etc.install "docs/scripts/sprite.zsh"
             end
 
             def caveats
               <<~EOS
                 Run the following to finish setup:
 
-                  dv-binary init
+                  sp-binary init
 
                 Then reload your shell:
 
@@ -101,7 +101,7 @@ jobs:
             end
 
             test do
-              assert_match version.to_s, shell_output("#{bin}/dv-binary --version")
+              assert_match version.to_s, shell_output("#{bin}/sp-binary --version")
             end
           end
           FORMULA
@@ -109,7 +109,7 @@ jobs:
           cd tap
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
-          git add Formula/dirvana.rb
+          git add Formula/sprite.rb
           git diff --staged --quiet && echo "Formula already up to date" && exit 0
-          git commit -m "dirvana ${VERSION}"
+          git commit -m "sprite ${VERSION}"
           git push

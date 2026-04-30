@@ -1,8 +1,8 @@
-#compdef dv
+#compdef sp
 
-_dv() {
+_sp() {
   local completions
-  completions=("${(@f)$(dv-binary --tab "${words[@]}")}")
-  
+  completions=("${(@f)$(sp-binary --tab "${words[@]}")}")
+
   compadd -S '' -Q -U -V 'Available Options' -- "${completions[@]}"
 }

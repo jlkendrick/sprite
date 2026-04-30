@@ -81,7 +81,7 @@ const Icon = ({ name, className = "ico", size }) => {
 // Each leaf `id` maps to a SECTIONS key.
 const TREE = [
   {
-    id: "_dirvana", label: "dirvana", type: "root", icon: "folder",
+    id: "_sprite", label: "sprite", type: "root", icon: "folder",
     children: [
       { id: "overview",      label: "overview.md",       type: "doc", icon: "doc" },
       { id: "quickstart",    label: "quick-start.sh",    type: "doc", icon: "term" },
@@ -117,7 +117,7 @@ const SECTIONS = {
   overview: {
     label: "overview.md",
     icon: "doc",
-    crumbs: ["~", "dirvana", "overview.md"],
+    crumbs: ["~", "sprite", "overview.md"],
     render: ({ openTab }) => (
       <>
         <div className="eyebrow">README · v1.0.1 · macOS</div>
@@ -125,7 +125,7 @@ const SECTIONS = {
           Terminal navigation, <em>distilled.</em>
         </h1>
         <p className="lede">
-          Dirvana (<code className="inl">dv</code>) is an intelligent directory navigator and command augmenter for Zsh. Jump to any folder by partial match, autocomplete paths inside any command, and bind your own shortcuts — all backed by a learning algorithm that adapts to how you actually work.
+          Sprite (<code className="inl">sp</code>) is an intelligent directory navigator and command augmenter for Zsh. Jump to any folder by partial match, autocomplete paths inside any command, and bind your own shortcuts — all backed by a learning algorithm that adapts to how you actually work.
         </p>
 
         <div className="hero-cta">
@@ -135,21 +135,21 @@ const SECTIONS = {
           <button className="btn btn-ghost" onClick={() => openTab("demo")}>
             <Icon name="term" /> Try the live demo
           </button>
-          <a className="btn btn-ghost" href="https://github.com/jlkendrick/dirvana" target="_blank" rel="noreferrer">
+          <a className="btn btn-ghost" href="https://github.com/jlkendrick/sprite" target="_blank" rel="noreferrer">
             <Icon name="github" /> View source
           </a>
         </div>
 
         <div className="install-row" style={{ marginTop: 24 }}>
-          <CmdCard label="curl" cmd={'curl -fsSL https://jlkendrick.github.io/dirvana/docs/install.sh | bash'} />
-          <CmdCard label="homebrew" cmd={'brew install jlkendrick/tap/dirvana'} />
+          <CmdCard label="curl" cmd={'curl -fsSL https://jlkendrick.github.io/sprite/docs/install.sh | bash'} />
+          <CmdCard label="homebrew" cmd={'brew install jlkendrick/tap/sprite'} />
         </div>
 
         <hr className="rule" />
 
-        <h2>Why Dirvana</h2>
+        <h2>Why Sprite</h2>
         <p>
-          Modern repos sprawl. You spend more time typing <code className="inl">cd ../../../</code> than running the command you actually wanted. Dirvana folds that overhead away — type a fragment, hit Enter, you're there. Prefix any command with <code className="inl">dv</code> and the same matching engine completes paths inside it.
+          Modern repos sprawl. You spend more time typing <code className="inl">cd ../../../</code> than running the command you actually wanted. Sprite folds that overhead away — type a fragment, hit Enter, you're there. Prefix any command with <code className="inl">sp</code> and the same matching engine completes paths inside it.
         </p>
 
         <div className="stat-row">
@@ -172,7 +172,7 @@ const SECTIONS = {
 
         <h3>Continue reading</h3>
         <p>
-          Open any file in the sidebar — or type <code className="inl">dv &lt;name&gt;</code> in the terminal below to navigate by name. Try{" "}
+          Open any file in the sidebar — or type <code className="inl">sp &lt;name&gt;</code> in the terminal below to navigate by name. Try{" "}
           <a onClick={() => openTab("quickstart")} style={{ color: "var(--accent)", cursor: "pointer", textDecoration: "underline" }}>quick-start.sh</a>,{" "}
           <a onClick={() => openTab("shortcuts")} style={{ color: "var(--accent)", cursor: "pointer", textDecoration: "underline" }}>shortcuts.md</a>, or{" "}
           <a onClick={() => openTab("demo")} style={{ color: "var(--accent)", cursor: "pointer", textDecoration: "underline" }}>live-demo.term</a>.
@@ -184,11 +184,11 @@ const SECTIONS = {
   quickstart: {
     label: "quick-start.sh",
     icon: "term",
-    crumbs: ["~", "dirvana", "quick-start.sh"],
+    crumbs: ["~", "sprite", "quick-start.sh"],
     render: ({ openTab }) => (
       <>
         <div className="eyebrow">Quick start · 60 seconds</div>
-        <h1 className="display">From zero to <em>dv</em>.</h1>
+        <h1 className="display">From zero to <em>sp</em>.</h1>
         <p className="lede">
           Three steps. One terminal restart. You'll be navigating by fragment before your coffee cools.
         </p>
@@ -197,36 +197,36 @@ const SECTIONS = {
           <div className="step"><div className="body">
             <strong>Install the binary</strong>
             <p>Pick your weapon. Both end at the same place.</p>
-            <CmdCard label="curl" cmd={'curl -fsSL https://jlkendrick.github.io/dirvana/docs/install.sh | bash'} />
+            <CmdCard label="curl" cmd={'curl -fsSL https://jlkendrick.github.io/sprite/docs/install.sh | bash'} />
             <div style={{ height: 8 }} />
-            <CmdCard label="homebrew" cmd={'brew install jlkendrick/tap/dirvana'} />
+            <CmdCard label="homebrew" cmd={'brew install jlkendrick/tap/sprite'} />
           </div></div>
 
           <div className="step"><div className="body">
             <strong>Initialize</strong>
-            <p>Wires Zsh completion, drops the <code className="inl">dv()</code> function into your <code className="inl">~/.zshrc</code>, and indexes your home directory.</p>
-            <Code><P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv-binary init" />{"\n"}<P tok="prompt" val="~ ❯ " /><P tok="cmd" val="source ~/.zshrc" /></Code>
+            <p>Wires Zsh completion, drops the <code className="inl">sp()</code> function into your <code className="inl">~/.zshrc</code>, and indexes your home directory.</p>
+            <Code><P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp-binary init" />{"\n"}<P tok="prompt" val="~ ❯ " /><P tok="cmd" val="source ~/.zshrc" /></Code>
           </div></div>
 
           <div className="step"><div className="body">
             <strong>Navigate</strong>
             <p>Type a fragment. Hit Enter. Or hit Tab for the menu.</p>
             <Code>
-              <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv " /><P tok="arg" val="dirv" />{"\n"}
-              <P tok="out" val="→ /Users/you/Code/dirvana" />{"\n\n"}
-              <P tok="prompt" val="dirvana ❯ " /><P tok="cmd" val="dv code " /><P tok="arg" val="src" /><P tok="flag" val="<Enter>" />{"\n"}
-              <P tok="out" val="→ code /Users/you/Code/dirvana/src" />
+              <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp " /><P tok="arg" val="dirv" />{"\n"}
+              <P tok="out" val="→ /Users/you/Code/sprite" />{"\n\n"}
+              <P tok="prompt" val="sprite ❯ " /><P tok="cmd" val="sp code " /><P tok="arg" val="src" /><P tok="flag" val="<Enter>" />{"\n"}
+              <P tok="out" val="→ code /Users/you/Code/sprite/src" />
             </Code>
           </div></div>
 
           <div className="step"><div className="body">
             <strong>Make it yours</strong>
             <p>Bind a shortcut to your most-run command — see <a onClick={() => openTab("shortcuts")} style={{ color: "var(--accent)", cursor: "pointer", textDecoration: "underline" }}>shortcuts.md</a> for the full system.</p>
-            <Code><P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='penv "source .venv/bin/activate && clear"' /></Code>
+            <Code><P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val='penv "source .venv/bin/activate && clear"' /></Code>
           </div></div>
         </div>
 
-        <div className="tip"><strong>Tip:</strong> a database refresh runs automatically when you start a new terminal. Manually trigger one with <code className="inl">dv refresh</code>.</div>
+        <div className="tip"><strong>Tip:</strong> a database refresh runs automatically when you start a new terminal. Manually trigger one with <code className="inl">sp refresh</code>.</div>
       </>
     )
   },
@@ -234,7 +234,7 @@ const SECTIONS = {
   "install-curl": {
     label: "install/curl.sh",
     icon: "term",
-    crumbs: ["~", "dirvana", "install", "curl.sh"],
+    crumbs: ["~", "sprite", "install", "curl.sh"],
     render: () => (
       <>
         <div className="eyebrow">Install · curl · recommended</div>
@@ -242,13 +242,13 @@ const SECTIONS = {
         <p className="lede">
           The installer downloads the latest binary to <code className="inl">~/.local/bin</code>, sets up Zsh completion, configures your <code className="inl">.zshrc</code>, and builds the initial directory database.
         </p>
-        <CmdCard big label="paste this into your shell" cmd={'curl -fsSL https://jlkendrick.github.io/dirvana/docs/install.sh | bash'} />
+        <CmdCard big label="paste this into your shell" cmd={'curl -fsSL https://jlkendrick.github.io/sprite/docs/install.sh | bash'} />
 
         <h3>What it does</h3>
         <ul style={{ paddingLeft: 18, color: "var(--ink-2)" }}>
-          <li>Downloads <code className="inl">dv-binary</code> to <code className="inl">~/.local/bin</code></li>
-          <li>Installs the Zsh completion script to <code className="inl">~/.zsh/completions/_dv</code></li>
-          <li>Adds the completion block, <code className="inl">dv()</code> function, and PATH export to <code className="inl">~/.zshrc</code></li>
+          <li>Downloads <code className="inl">sp-binary</code> to <code className="inl">~/.local/bin</code></li>
+          <li>Installs the Zsh completion script to <code className="inl">~/.zsh/completions/_sp</code></li>
+          <li>Adds the completion block, <code className="inl">sp()</code> function, and PATH export to <code className="inl">~/.zshrc</code></li>
           <li>Builds the initial database from your home directory</li>
         </ul>
 
@@ -260,7 +260,7 @@ const SECTIONS = {
   "install-brew": {
     label: "install/brew.sh",
     icon: "term",
-    crumbs: ["~", "dirvana", "install", "brew.sh"],
+    crumbs: ["~", "sprite", "install", "brew.sh"],
     render: () => (
       <>
         <div className="eyebrow">Install · Homebrew</div>
@@ -270,22 +270,22 @@ const SECTIONS = {
         </p>
 
         <h3>One-liner</h3>
-        <CmdCard label="single command" cmd={'brew install jlkendrick/tap/dirvana'} />
+        <CmdCard label="single command" cmd={'brew install jlkendrick/tap/sprite'} />
 
         <h3>Or, step by step</h3>
         <Code>
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="brew tap jlkendrick/tap" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="brew install dirvana" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="brew install sprite" />
         </Code>
 
         <h3>Finish setup</h3>
         <p>After Homebrew finishes, wire up your shell and seed the directory database:</p>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv-binary init" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp-binary init" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="source ~/.zshrc" />
         </Code>
         <p style={{ color: "var(--ink-3)", fontSize: 13.5 }}>
-          <code className="inl">dv-binary init</code> adds the Dirvana completion block and <code className="inl">dv()</code> function to your <code className="inl">~/.zshrc</code> and builds the database from your home directory. The same step is repeated in the formula caveats.
+          <code className="inl">sp-binary init</code> adds the Sprite completion block and <code className="inl">sp()</code> function to your <code className="inl">~/.zshrc</code> and builds the database from your home directory. The same step is repeated in the formula caveats.
         </p>
       </>
     )
@@ -294,19 +294,19 @@ const SECTIONS = {
   "install-manual": {
     label: "install/manual.md",
     icon: "doc",
-    crumbs: ["~", "dirvana", "install", "manual.md"],
+    crumbs: ["~", "sprite", "install", "manual.md"],
     render: () => (
       <>
         <div className="eyebrow">Install · manual</div>
         <h1 className="display">Full control, every file.</h1>
         <p className="lede">
-          For when you want to know — and own — every line that touches your shell config. There are two routes: semi-automatic (let <code className="inl">dv-binary init</code> finish the job) or fully manual.
+          For when you want to know — and own — every line that touches your shell config. There are two routes: semi-automatic (let <code className="inl">sp-binary init</code> finish the job) or fully manual.
         </p>
 
         <h3>1 · Download the binary</h3>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="curl -fsSL -o ~/.local/bin/dv-binary https://raw.githubusercontent.com/jlkendrick/dirvana/main/docs/bin/dv-binary" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="chmod +x ~/.local/bin/dv-binary" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="curl -fsSL -o ~/.local/bin/sp-binary https://raw.githubusercontent.com/jlkendrick/sprite/main/docs/bin/sp-binary" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="chmod +x ~/.local/bin/sp-binary" />{"\n"}
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val={'export PATH="$HOME/.local/bin:$PATH"'} />
         </Code>
 
@@ -314,8 +314,8 @@ const SECTIONS = {
         <div className="two-col">
           <div className="feat">
             <div className="name"><Icon name="bolt" />Option A · semi-auto <span className="pill">recommended</span></div>
-            <p className="desc">Let <code className="inl">dv-binary init</code> install the completion script, edit <code className="inl">~/.zshrc</code>, and seed the database in one go.</p>
-            <Code><P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv-binary init" />{"\n"}<P tok="prompt" val="~ ❯ " /><P tok="cmd" val="source ~/.zshrc" /></Code>
+            <p className="desc">Let <code className="inl">sp-binary init</code> install the completion script, edit <code className="inl">~/.zshrc</code>, and seed the database in one go.</p>
+            <Code><P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp-binary init" />{"\n"}<P tok="prompt" val="~ ❯ " /><P tok="cmd" val="source ~/.zshrc" /></Code>
           </div>
           <div className="feat">
             <div className="name"><Icon name="wrench" />Option B · fully manual</div>
@@ -326,13 +326,13 @@ const SECTIONS = {
         <h3>3 · Install the Zsh completion script</h3>
         <Code>
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="mkdir -p ~/.zsh/completions" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="curl -fsSL -o ~/.zsh/completions/_dv https://raw.githubusercontent.com/jlkendrick/dirvana/main/docs/scripts/_dv" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="curl -fsSL -o ~/.zsh/completions/_sp https://raw.githubusercontent.com/jlkendrick/sprite/main/docs/scripts/_sp" />
         </Code>
 
         <h3>4 · Configure Zsh</h3>
         <p>Add the following to your <code className="inl">~/.zshrc</code>:</p>
         <Code>
-          <P tok="comment" val="# Dirvana Zsh completion configuration" />{"\n"}
+          <P tok="comment" val="# Sprite Zsh completion configuration" />{"\n"}
           <P tok="cmd" val="fpath=(~/.zsh/completions $fpath)" />{"\n\n"}
           <P tok="cmd" val="zstyle ':completion:*' list-grouped yes" />{"\n"}
           <P tok="cmd" val="zstyle ':completion:*' menu select" />{"\n"}
@@ -340,17 +340,17 @@ const SECTIONS = {
           <P tok="cmd" val="setopt menucomplete" />{"\n"}
           <P tok="cmd" val="setopt autolist" />{"\n\n"}
           <P tok="cmd" val="autoload -Uz compinit && compinit -u" />{"\n\n"}
-          <P tok="comment" val="# Dirvana command handler" />{"\n"}
-          <P tok="cmd" val="dv() {" />{"\n"}
-          <P tok="cmd" val={'  local cmd\n  cmd=$(dv-binary --enter dv "$@")\n  if [[ -n "$cmd" ]]; then eval "$cmd"; else echo "dv-error: No command found for \'$*\'"; fi\n}'} />{"\n\n"}
+          <P tok="comment" val="# Sprite command handler" />{"\n"}
+          <P tok="cmd" val="sp() {" />{"\n"}
+          <P tok="cmd" val={'  local cmd\n  cmd=$(sp-binary --enter sp "$@")\n  if [[ -n "$cmd" ]]; then eval "$cmd"; else echo "sp-error: No command found for \'$*\'"; fi\n}'} />{"\n\n"}
           <P tok="comment" val="# Auto-refresh database on terminal start" />{"\n"}
-          <P tok="cmd" val="dv-binary --enter dv refresh &> /dev/null & disown" />
+          <P tok="cmd" val="sp-binary --enter sp refresh &> /dev/null & disown" />
         </Code>
 
         <h3>5 · Initialize database</h3>
         <Code>
           <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="source ~/.zshrc" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root ~" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp build --root ~" />
         </Code>
       </>
     )
@@ -359,7 +359,7 @@ const SECTIONS = {
   features: {
     label: "features/overview.md",
     icon: "sparkle",
-    crumbs: ["~", "dirvana", "features", "overview.md"],
+    crumbs: ["~", "sprite", "features", "overview.md"],
     render: () => (
       <>
         <div className="eyebrow">Features</div>
@@ -380,7 +380,7 @@ const SECTIONS = {
         </div>
 
         <h2>Match modes</h2>
-        <p>How Dirvana decides what counts as a hit. Default is <code className="inl">contains</code>; switch via <code className="inl">config.json</code>.</p>
+        <p>How Sprite decides what counts as a hit. Default is <code className="inl">contains</code>; switch via <code className="inl">config.json</code>.</p>
         <div className="cfg-table">
           <div className="h">Mode</div><div className="h">Behavior</div><div className="h">Best for</div>
           <div className="c k">exact</div><div className="c d">Only matches directories with the exact name.</div><div className="c v">precision</div>
@@ -400,9 +400,9 @@ const SECTIONS = {
         <h2>Filesystem drill-in</h2>
         <p>Append <code className="inl">/</code> to any path to bypass the database and browse the live filesystem instead.</p>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv ~/Code/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="    # Lists every entry inside ~/Code/" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv proj" /><P tok="flag" val="<Tab>" /><P tok="comment" val="        # Database match for 'proj'" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv /full/path/to/proj/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="  # ...then drill in with /" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp ~/Code/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="    # Lists every entry inside ~/Code/" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp proj" /><P tok="flag" val="<Tab>" /><P tok="comment" val="        # Database match for 'proj'" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp /full/path/to/proj/" /><P tok="flag" val="<Tab>" /><P tok="comment" val="  # ...then drill in with /" />
         </Code>
       </>
     )
@@ -411,30 +411,30 @@ const SECTIONS = {
   shortcuts: {
     label: "features/shortcuts.md",
     icon: "key",
-    crumbs: ["~", "dirvana", "features", "shortcuts.md"],
+    crumbs: ["~", "sprite", "features", "shortcuts.md"],
     render: () => (
       <>
         <div className="eyebrow">Shortcuts system</div>
         <h1 className="display">Bind once. <em>Use forever.</em></h1>
         <p className="lede">
-          A shortcut is an alias that knows about paths. Bind <code className="inl">code</code> to <code className="inl">code</code>, then <code className="inl">dv code dirv</code> resolves the path, expands, and runs.
+          A shortcut is an alias that knows about paths. Bind <code className="inl">code</code> to <code className="inl">code</code>, then <code className="inl">sp code dirv</code> resolves the path, expands, and runs.
         </p>
 
         <h2>Add</h2>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'cc "cd {} && claude"'} />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'gitlog "git -C {} log --oneline -10"'} />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'serve "python3 -m http.server 8080 --directory {}"'} />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val={'cc "cd {} && claude"'} />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val={'gitlog "git -C {} log --oneline -10"'} />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val={'serve "python3 -m http.server 8080 --directory {}"'} />
         </Code>
 
         <h2>Use</h2>
-        <p>Shortcuts use the same fuzzy completion as bare <code className="inl">dv</code>. A few bound above, in action:</p>
+        <p>Shortcuts use the same fuzzy completion as bare <code className="inl">sp</code>. A few bound above, in action:</p>
         <Code>
           <P tok="comment" val="# cd into a project and open Claude Code" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv cc " /><P tok="arg" val="api" /><P tok="flag" val="<Enter>" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp cc " /><P tok="arg" val="api" /><P tok="flag" val="<Enter>" />{"\n"}
           <P tok="out" val="→ cd /Users/you/Code/api-server && claude" />{"\n\n"}
           <P tok="comment" val="# run git log inside a project without cd-ing first" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv gitlog " /><P tok="arg" val="front" /><P tok="flag" val="<Enter>" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp gitlog " /><P tok="arg" val="front" /><P tok="flag" val="<Enter>" />{"\n"}
           <P tok="out" val="→ git -C /Users/you/Code/frontend log --oneline -10" />
         </Code>
 
@@ -444,25 +444,25 @@ const SECTIONS = {
         </p>
         <Code>
           <P tok="comment" val="# {} mid-command: path goes where you put it" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'diff "git -C {} diff HEAD"'} />{"\n\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val={'diff "git -C {} diff HEAD"'} />{"\n\n"}
           <P tok="comment" val="# {} twice: same path in two places" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'mkcd "mkdir -p {} && cd {}"'} />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val={'mkcd "mkdir -p {} && cd {}"'} />
         </Code>
 
         <h2>Manage</h2>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv list" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp list" />{"\n"}
           <P tok="out" val="Shortcuts:" />{"\n"}
           <P tok="out" val="code  | code" />{"\n"}
           <P tok="out" val="idea  | idea" />{"\n"}
           <P tok="out" val="term  | open -a Terminal" />{"\n\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv show " /><P tok="arg" val="code" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp show " /><P tok="arg" val="code" />{"\n"}
           <P tok="out" val="Shortcut: code | Command: code" />{"\n\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv delete " /><P tok="arg" val="code" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp delete " /><P tok="arg" val="code" />{"\n"}
           <P tok="out" val="Shortcut code deleted" />
         </Code>
 
-        <div className="tip"><strong>Pro move:</strong> bind a single-letter shortcut to your editor (<code className="inl">dv add c "cursor"</code>) and you'll never type its name again.</div>
+        <div className="tip"><strong>Pro move:</strong> bind a single-letter shortcut to your editor (<code className="inl">sp add c "cursor"</code>) and you'll never type its name again.</div>
       </>
     )
   },
@@ -470,31 +470,31 @@ const SECTIONS = {
   demo: {
     label: "features/live-demo.term",
     icon: "term",
-    crumbs: ["~", "dirvana", "features", "live-demo.term"],
+    crumbs: ["~", "sprite", "features", "live-demo.term"],
     render: () => (
       <>
         <div className="eyebrow">Live demo</div>
         <h1 className="display">Try it without installing.</h1>
         <p className="lede">
-          The terminal at the bottom of this window is real — well, real-ish. It runs a sandboxed simulation of Dirvana against this very documentation. Every file in the sidebar is a navigable directory.
+          The terminal at the bottom of this window is real — well, real-ish. It runs a sandboxed simulation of Sprite against this very documentation. Every file in the sidebar is a navigable directory.
         </p>
 
         <h3>Things to try</h3>
         <ol style={{ paddingLeft: 18, color: "var(--ink-2)", fontSize: 14.5, lineHeight: 1.8 }}>
-          <li>Type <code className="inl">dv install</code> and press <kbd>Enter</kbd> — quick-nav to the install tab.</li>
-          <li>Type <code className="inl">dv shor</code> and press <kbd>Tab</kbd> — see the completion menu in action.</li>
-          <li>Type <code className="inl">dv ls</code> to list everything in the current directory.</li>
-          <li>Type <code className="inl">dv list</code> to see the bound shortcuts.</li>
+          <li>Type <code className="inl">sp install</code> and press <kbd>Enter</kbd> — quick-nav to the install tab.</li>
+          <li>Type <code className="inl">sp shor</code> and press <kbd>Tab</kbd> — see the completion menu in action.</li>
+          <li>Type <code className="inl">sp ls</code> to list everything in the current directory.</li>
+          <li>Type <code className="inl">sp list</code> to see the bound shortcuts.</li>
           <li>Type <code className="inl">help</code> to see every supported command.</li>
         </ol>
 
         <h3>How it maps</h3>
         <div className="cfg-table">
           <div className="h">In your shell</div><div className="h">In this demo</div><div className="h">Effect</div>
-          <div className="c k">dv &lt;name&gt;&lt;Enter&gt;</div><div className="c d">Navigates to the matching tab.</div><div className="c v">quick-nav</div>
-          <div className="c k">dv &lt;name&gt;&lt;Tab&gt;</div><div className="c d">Shows a completion menu of matching docs.</div><div className="c v">tab menu</div>
-          <div className="c k">dv ls</div><div className="c d">Prints the current directory's contents.</div><div className="c v">list</div>
-          <div className="c k">dv code &lt;name&gt;</div><div className="c d">Pretends to open the file in your editor.</div><div className="c v">shortcut</div>
+          <div className="c k">sp &lt;name&gt;&lt;Enter&gt;</div><div className="c d">Navigates to the matching tab.</div><div className="c v">quick-nav</div>
+          <div className="c k">sp &lt;name&gt;&lt;Tab&gt;</div><div className="c d">Shows a completion menu of matching docs.</div><div className="c v">tab menu</div>
+          <div className="c k">sp ls</div><div className="c d">Prints the current directory's contents.</div><div className="c v">list</div>
+          <div className="c k">sp code &lt;name&gt;</div><div className="c d">Pretends to open the file in your editor.</div><div className="c v">shortcut</div>
         </div>
 
         <div className="tip"><strong>Heads up:</strong> the simulation is not the real binary. For real-world use install via curl or Homebrew — it'll feel exactly the same.</div>
@@ -505,13 +505,13 @@ const SECTIONS = {
   config: {
     label: "config.json",
     icon: "gear",
-    crumbs: ["~", "dirvana", "config.json"],
+    crumbs: ["~", "sprite", "config.json"],
     render: () => (
       <>
         <div className="eyebrow">Configuration</div>
         <h1 className="display">Tune every knob.</h1>
         <p className="lede">
-          Dirvana's config lives at <code className="inl">~/Library/Application Support/dirvana/config.json</code>. Edit it directly — changes take effect on the next command.
+          Sprite's config lives at <code className="inl">~/Library/Application Support/sprite/config.json</code>. Edit it directly — changes take effect on the next command.
         </p>
 
         <h3>Default config</h3>
@@ -519,7 +519,7 @@ const SECTIONS = {
           {"{\n"}
           <P tok="key" val='  "paths"' /><P tok="cmd" val=": {" />{"\n"}
           <P tok="key" val='    "init"' /><P tok="cmd" val=": " /><P tok="str" val='"/Users/you"' /><P tok="cmd" val="," />{"\n"}
-          <P tok="key" val='    "db"' /><P tok="cmd" val=": " /><P tok="str" val='"~/Library/Application Support/dirvana/dirvana.db"' />{"\n"}
+          <P tok="key" val='    "db"' /><P tok="cmd" val=": " /><P tok="str" val='"~/Library/Application Support/sprite/sprite.db"' />{"\n"}
           <P tok="cmd" val="  }," />{"\n"}
           <P tok="key" val='  "matching"' /><P tok="cmd" val=": {" />{"\n"}
           <P tok="key" val='    "max_results"' /><P tok="cmd" val=": " /><P tok="num" val="10" /><P tok="cmd" val="," />{"\n"}
@@ -540,7 +540,7 @@ const SECTIONS = {
         <div className="cfg-table">
           <div className="h">Option</div><div className="h">Description</div><div className="h">Default</div>
           <div className="c k">init</div><div className="c d">Root directory for database scanning.</div><div className="c v">~/</div>
-          <div className="c k">db</div><div className="c d">SQLite database location.</div><div className="c v">…/dirvana.db</div>
+          <div className="c k">db</div><div className="c d">SQLite database location.</div><div className="c v">…/sprite.db</div>
         </div>
 
         <h3>Matching</h3>
@@ -563,20 +563,20 @@ const SECTIONS = {
   tips: {
     label: "tips.md",
     icon: "compass",
-    crumbs: ["~", "dirvana", "tips.md"],
+    crumbs: ["~", "sprite", "tips.md"],
     render: () => (
       <>
         <div className="eyebrow">Tips & best practices</div>
-        <h1 className="display">Get the most out of <em>dv</em>.</h1>
+        <h1 className="display">Get the most out of <em>sp</em>.</h1>
 
         <h2>Pick the right root</h2>
-        <p>The root directory is the universe Dirvana scans. Make it tight enough to be fast, broad enough to cover your actual work.</p>
+        <p>The root directory is the universe Sprite scans. Make it tight enough to be fast, broad enough to cover your actual work.</p>
         <Code>
           <P tok="comment" val="# Good choices" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root ~/Code" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root ~/Documents" />{"\n\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp build --root ~/Code" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp build --root ~/Documents" />{"\n\n"}
           <P tok="comment" val="# Less optimal — too many directories, slow performance" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv build --root /" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp build --root /" />
         </Code>
 
         <h2>Match-mode cheat sheet</h2>
@@ -590,21 +590,21 @@ const SECTIONS = {
 
         <h2>Shortcuts that pay rent</h2>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='c "cursor"' />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='penv "source .venv/bin/activate && source .env && clear"' />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val='rmdir "rm -rf"' />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="dv add " /><P tok="arg" val={'claude "cd {} && claude"'} />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val='c "cursor"' />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val='penv "source .venv/bin/activate && source .env && clear"' />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val='rmdir "rm -rf"' />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="sp add " /><P tok="arg" val={'claude "cd {} && claude"'} />
         </Code>
 
         <h2>Performance</h2>
         <ul style={{ paddingLeft: 18, color: "var(--ink-2)" }}>
           <li>Use <strong>exclusions</strong> to skip large irrelevant directories.</li>
-          <li>Run <code className="inl">dv refresh</code> periodically — or just rely on the auto-refresh on terminal start.</li>
+          <li>Run <code className="inl">sp refresh</code> periodically — or just rely on the auto-refresh on terminal start.</li>
           <li>Tune <code className="inl">max_results</code> to your screen size.</li>
           <li>Set <code className="inl">max_history_size</code> appropriately — larger means better predictions, more storage.</li>
         </ul>
 
-        <div className="tip"><strong>Bypass syntax:</strong> use <code className="inl">--</code> to opt out of Dirvana's command interpretation. <code className="inl">dv -- build</code> navigates to a directory called "build" instead of running the build subcommand.</div>
+        <div className="tip"><strong>Bypass syntax:</strong> use <code className="inl">--</code> to opt out of Sprite's command interpretation. <code className="inl">sp -- build</code> navigates to a directory called "build" instead of running the build subcommand.</div>
       </>
     )
   },
@@ -612,7 +612,7 @@ const SECTIONS = {
   troubleshoot: {
     label: "troubleshoot.md",
     icon: "wrench",
-    crumbs: ["~", "dirvana", "troubleshoot.md"],
+    crumbs: ["~", "sprite", "troubleshoot.md"],
     render: () => (
       <>
         <div className="eyebrow">Troubleshooting</div>
@@ -626,25 +626,25 @@ const SECTIONS = {
           <li>Ensure <code className="inl">~/.local/bin</code> is in your <code className="inl">PATH</code>.</li>
           <li>Verify <code className="inl">fpath</code> includes <code className="inl">~/.zsh/completions</code>.</li>
           <li>Run <code className="inl">compinit</code> to rebuild the completion cache.</li>
-          <li>Make sure <code className="inl">dv-binary</code> is executable: <code className="inl">chmod +x ~/.local/bin/dv-binary</code>.</li>
+          <li>Make sure <code className="inl">sp-binary</code> is executable: <code className="inl">chmod +x ~/.local/bin/sp-binary</code>.</li>
         </ol>
 
         <h3>Database not updating</h3>
         <ol style={{ paddingLeft: 18, color: "var(--ink-2)" }}>
-          <li>Run <code className="inl">dv refresh</code> manually.</li>
-          <li>Check the configured root: <code className="inl">cat ~/Library/Application\ Support/dirvana/config.json</code>.</li>
-          <li>Rebuild from scratch: <code className="inl">dv build --root ~/your/root/path</code>.</li>
+          <li>Run <code className="inl">sp refresh</code> manually.</li>
+          <li>Check the configured root: <code className="inl">cat ~/Library/Application\ Support/sprite/config.json</code>.</li>
+          <li>Rebuild from scratch: <code className="inl">sp build --root ~/your/root/path</code>.</li>
         </ol>
 
         <h3>Permission errors</h3>
         <Code>
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="chmod 755 ~/Library/Application\\ Support/dirvana" />{"\n"}
-          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="chmod 644 ~/Library/Application\\ Support/dirvana/config.json" />
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="chmod 755 ~/Library/Application\\ Support/sprite" />{"\n"}
+          <P tok="prompt" val="~ ❯ " /><P tok="cmd" val="chmod 644 ~/Library/Application\\ Support/sprite/config.json" />
         </Code>
 
         <h3>Command not found</h3>
         <ol style={{ paddingLeft: 18, color: "var(--ink-2)" }}>
-          <li>Find the binary: <code className="inl">which dv-binary</code>.</li>
+          <li>Find the binary: <code className="inl">which sp-binary</code>.</li>
           <li>Add to <code className="inl">PATH</code> in <code className="inl">.zshrc</code>: <code className="inl">{'export PATH="$HOME/.local/bin:$PATH"'}</code>.</li>
           <li>Reload your shell: <code className="inl">source ~/.zshrc</code>.</li>
         </ol>
@@ -652,7 +652,7 @@ const SECTIONS = {
         <hr className="rule" />
         <p style={{ fontSize: 13.5, color: "var(--ink-3)" }}>
           Still stuck? Open an issue on the{" "}
-          <a href="https://github.com/jlkendrick/dirvana" target="_blank" rel="noreferrer" style={{ color: "var(--accent)" }}>GitHub repo</a> — issues and PRs are welcome under the MIT license.
+          <a href="https://github.com/jlkendrick/sprite" target="_blank" rel="noreferrer" style={{ color: "var(--accent)" }}>GitHub repo</a> — issues and PRs are welcome under the MIT license.
         </p>
       </>
     )

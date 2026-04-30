@@ -13,7 +13,7 @@ class HandlerTest : public ::testing::Test {
 protected:
 	void SetUp() override {
 		ConfigArgs args;
-		args.db_path = (filesystem::temp_directory_path() / "dirvana_handler_test.db").string();
+		args.db_path = (filesystem::temp_directory_path() / "sprite_handler_test.db").string();
 		filesystem::remove(args.db_path);
 		temp_config = make_unique<TempConfigFile>(args);
 		config = make_unique<Config>(temp_config->get_path());
@@ -76,7 +76,7 @@ TEST_F(HandlerTest, EnterUnknownPartial) {
 TEST_F(HandlerTest, EnterVersionFlag) {
 	auto [ret, output] = run_enter({}, {{"", "version", ""}});
 	EXPECT_EQ(ret, 0);
-	EXPECT_EQ(output, "echo Dirvana version 1.0.1\n");
+	EXPECT_EQ(output, "echo Sprite version 1.0.1\n");
 }
 
 // Shortcut takes priority over path lookup; no last token so command gets a trailing space
@@ -147,7 +147,7 @@ TEST_F(HandlerTest, ShowWrongArgCount) {
 
 TEST_F(HandlerTest, TabCompletionPartial) {
 	string mockfs = config->get_init_path();
-	vector<string> args = {"dv-binary", "--tab", "dv", "1"};
+	vector<string> args = {"sp-binary", "--tab", "sp", "1"};
 	vector<const char*> argv_ptrs;
 	for (const auto& a : args) argv_ptrs.push_back(a.c_str());
 
@@ -162,7 +162,7 @@ TEST_F(HandlerTest, TabCompletionPartial) {
 }
 
 TEST_F(HandlerTest, TabCompletionTooFewArgs) {
-	const char* argv[] = {"dv-binary", "--tab", "dv"};
+	const char* argv[] = {"sp-binary", "--tab", "sp"};
 	testing::internal::CaptureStderr();
 	int ret = handler->handle_tab(3, const_cast<char**>(argv));
 	testing::internal::GetCapturedStderr();
