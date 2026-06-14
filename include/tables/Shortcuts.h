@@ -16,6 +16,10 @@ public:
 		void delete_shortcut(const std::string& shortcut);
 		std::vector<std::string> select_all_shortcuts() const;
 		std::string select_shortcut_command(const std::string& shortcut) const;
+
+		// Return "shortcut | command" for shortcuts whose command contains every term
+		// (case-insensitive). Used by `sp recall --shortcuts`.
+		std::vector<std::string> search_commands(const std::vector<std::string>& terms, int limit) const;
 };
 
 #endif // SHORTCUTS_TABLE_H

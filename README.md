@@ -10,6 +10,7 @@ Sprite (`sp`) streamlines terminal workflow by providing smart directory navigat
 - **⚡ Quick-Nav** - Instantly navigate to the best match by pressing Enter
 - **🎯 Tab Completion** - Interactive menu-based path completion integrated with Zsh
 - **🔗 Custom Shortcuts** - Create command aliases that work with path completion
+- **🔮 Command Recall** - Tab to browse the commands you've run in a directory, Enter to paste the best match back onto your prompt
 - **🧠 Learning Algorithm** - Adapts to your usage patterns with frequency-based and recency-based ranking
 - **⚙️ Highly Configurable** - Customize matching behavior, exclusions, and result limits
 - **💾 Persistent History** - SQLite-backed database remembers your navigation patterns
@@ -154,6 +155,18 @@ sp() {
 
 # Auto-refresh database on terminal start
 sp-binary --enter sp refresh &> /dev/null & disown
+
+# Sprite command recorder (powers `sp recall`)
+autoload -Uz add-zsh-hook
+_sprite_preexec() { _SPRITE_CMD="$1"; _SPRITE_DIR="$PWD"; }
+_sprite_precmd() {
+  local _sprite_exit=$?
+  [[ -n "$_SPRITE_CMD" ]] && \
+    sp-binary --log --dir "$_SPRITE_DIR" --exit "$_sprite_exit" -- "$_SPRITE_CMD" &> /dev/null &|
+  unset _SPRITE_CMD
+}
+add-zsh-hook preexec _sprite_preexec
+add-zsh-hook precmd  _sprite_precmd
 ```
 
 #### 5️⃣ Initialize Database
@@ -284,6 +297,52 @@ sp show code
 ```sh
 sp delete code
 # Output: Shortcut code deleted
+```
+
+### Command Recall
+
+Sprite remembers the commands you run and the directory you ran them in, so you can pull
+back a command you've forgotten (or one that was too long to retype) instead of digging
+through your shell history. Every command is recorded locally by a Zsh hook (installed with
+Sprite) — nothing ever leaves your machine.
+
+#### Recall a Command
+
+Recall uses the same two keys as navigation, and never runs anything on its own — it puts a
+command in front of you and lets you decide:
+
+- **`<Tab>`** pops up a menu of the matching commands to browse and pick from (like completing
+  a path).
+- **`<Enter>`** pastes the best match onto your prompt, ready to run — **press Enter again to
+  execute it**, or edit it first.
+
+```sh
+sp recall cmake<Tab>     # menu of past commands here matching "cmake"
+sp recall cmake<Enter>   # paste the best cmake match onto the prompt; Enter again runs it
+sp recall docker compose # all terms must match (AND); case-insensitive
+sp recall<Tab>           # browse the most recent commands run in this directory
+```
+
+Matches are scoped to the current directory and ranked by how recently and how often you've
+used them. Because recall only pastes (never auto-runs), you always get to review or tweak a
+command before it executes.
+
+#### Scope and Listing
+
+```sh
+sp recall cmake --in api      # search in another dir (partial resolved like navigation)
+sp recall cmake --in ~/Code/x # ...or an explicit path
+sp recall deploy --all        # search across every directory
+sp recall test --list         # show all matches instead of picking the top one
+```
+
+#### Search Your Shortcuts
+
+`--shortcuts` searches your saved [shortcuts](#shortcuts-system) by their command text — handy
+for "which shortcut was that?". Combine with `--list` to see every match:
+
+```sh
+sp recall cd --shortcuts --list   # every shortcut whose command uses cd
 ```
 
 ### Database Management

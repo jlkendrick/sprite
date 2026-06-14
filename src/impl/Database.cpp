@@ -1,10 +1,26 @@
 #include "Database.h"
 
 
-Database::Database(const Config& config) : db(config.get_db_path()), config(config), paths_table(*this), shortcuts_table(*this) {
-	// Create the necessary table if it doesn't exist
+Database::Database(const Config& config) : db(config.get_db_path()), config(config), paths_table(*this), shortcuts_table(*this), commands_table(*this) {
+	// Make concurrent access from the backgrounded command recorder (--log) and foreground
+	// queries safe. busy_timeout MUST be set first so the WAL switch (and everything after)
+	// waits for a lock instead of erroring out immediately. WAL is best-effort: if it can't
+	// be established under contention we fall back to the default journal mode, which the
+	// busy timeout still serializes correctly.
+	try {
+		db << "PRAGMA busy_timeout = 5000;";
+		// Best-effort and silent: WAL persists once set (at init/build), so re-asserting it on
+		// later opens is a no-op. Only a brand-new db under heavy concurrent first-writes can
+		// lose the mode-switch lock race; swallow it rather than leak a warning to the user's
+		// terminal — the busy timeout keeps access correct regardless of journal mode.
+		db << "PRAGMA journal_mode = WAL;";
+	} catch (const sqlite::sqlite_exception&) {
+	}
+
+	// Create the necessary tables if they don't exist
 	paths_table.create_table();
 	shortcuts_table.create_table();
+	commands_table.create_table();
 }
 
 

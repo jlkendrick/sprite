@@ -67,6 +67,7 @@ set(SPRITE_SOURCES
 	src/impl/tables/Table.cpp
 	src/impl/tables/Paths.cpp
 	src/impl/tables/Shortcuts.cpp
+	src/impl/tables/Commands.cpp
 	src/impl/utils/Helpers.cpp
 )
 add_library(sprite_lib ${SPRITE_SOURCES})
@@ -110,6 +111,7 @@ if(BUILD_TESTS)
     set(TEST_SOURCES
         tests/test_Database.cpp
         tests/test_Shortcuts.cpp
+        tests/test_Commands.cpp
         tests/test_Handler.cpp
         tests/test_Helpers.cpp
     )

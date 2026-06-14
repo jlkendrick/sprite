@@ -1,11 +1,53 @@
 #include "Handler.h"
 
+#include <cstdlib>
 #include <fstream>
 #include <filesystem>
 #include <mach-o/dyld.h>
 #include <unistd.h>
 
 Handler::Handler(Database& db, const std::string& version) : db(db), version(version) {}
+
+// Parsed form of a `recall` invocation. recall is passed through raw (so candidate commands keep
+// their own flags), and we pick out our own flags here; everything else is a fuzzy search term.
+struct RecallArgs {
+	std::vector<std::string> terms;
+	std::string in_value;
+	bool all = false;
+	bool list = false;
+	bool shortcuts = false;
+};
+
+static RecallArgs parse_recall_args(const std::vector<std::string>& tokens, size_t start) {
+	RecallArgs r;
+	for (size_t i = start; i < tokens.size(); i++) {
+		const std::string& tok = tokens[i];
+		if (tok == "--all" or tok == "-a") r.all = true;
+		else if (tok == "--list" or tok == "-l") r.list = true;
+		else if (tok == "--shortcuts") r.shortcuts = true;
+		else if (tok == "--in" or tok == "-i") { if (i + 1 < tokens.size()) r.in_value = tokens[++i]; }
+		else r.terms.push_back(tok);
+	}
+	return r;
+}
+
+// Resolve the directory a recall is scoped to. Empty -> the shell's logical $PWD (what the
+// recorder logs). A path (contains '/' or '~') is used as-is; a bare partial is resolved through
+// the paths index, exactly like navigation (so `--in sprite` finds the repo).
+static std::string recall_resolve_dir(Database& db, const std::string& in_value) {
+	if (in_value.empty()) {
+		const char* pwd = std::getenv("PWD");
+		if (pwd and pwd[0] != '\0')
+			return pwd;
+		std::error_code ec;
+		auto cwd = std::filesystem::current_path(ec);
+		return ec ? std::string() : cwd.string();
+	}
+	if (in_value.find('/') != std::string::npos or in_value.find('~') != std::string::npos)
+		return in_value;
+	std::vector<std::string> matches = db.get_paths_table().query(in_value);
+	return matches.empty() ? in_value : matches[0];
+}
 
 int Handler::handle_tab(int argc, char* argv[]) {
 	// Need at least 4 arguments: sp_binary, --tab, sp, partial_path
@@ -14,8 +56,20 @@ int Handler::handle_tab(int argc, char* argv[]) {
 		return 1;
 	}
 
-	
-	
+	// Tab on `recall`: pop up the matching commands as the completion menu (the navigation
+	// equivalent of completing a path). Selecting one drops it on the line to run with Enter.
+	if (std::string(argv[3]) == "recall") {
+		std::vector<std::string> tokens(argv, argv + argc);
+		RecallArgs ra = parse_recall_args(tokens, 4);
+		const int limit = db.get_config().get_max_results();
+		std::vector<std::string> matches = ra.shortcuts
+			? db.get_shortcuts_table().search_commands(ra.terms, limit)
+			: db.get_commands_table().recall(ra.terms, recall_resolve_dir(db, ra.in_value), ra.all, limit);
+		for (const auto& match : matches)
+			std::cout << match << std::endl;
+		return 0;
+	}
+
 	// Last argument is the partial path
 	std::string partial = argv[argc - 1];
 
@@ -73,6 +127,8 @@ int Handler::handle_enter(std::vector<std::string>& commands, std::vector<Flag>&
 			return Subcommands::handle_list(*this, commands, flags);
 		else if (first_token == "show")
 			return Subcommands::handle_show(*this, commands, flags);
+		else if (first_token == "recall")
+			return Subcommands::handle_recall(*this, commands, flags);
 	}
 
 	// If we are here, need to handle a shortcut or a path. We prioritize shortcuts over paths
@@ -154,6 +210,49 @@ int Handler::handle_enter(std::vector<std::string>& commands, std::vector<Flag>&
 		std::cout << prefix << " " << path << std::endl;
 
 	return 0;
+}
+
+// Record a command via the recorder hook: `sp-binary --log --dir <cwd> --exit <code> -- <command>`.
+// Parsed by hand so the logged command's own flags are never interpreted as Sprite flags.
+int Handler::handle_log(int argc, char* argv[]) {
+	std::string directory;
+	int exit_code = 0;
+	std::string command;
+
+	for (int i = 2; i < argc; i++) {
+		std::string arg = argv[i];
+		if (arg == "--dir" and i + 1 < argc) {
+			directory = argv[++i];
+		} else if (arg == "--exit" and i + 1 < argc) {
+			try { exit_code = std::stoi(argv[++i]); } catch (...) { exit_code = 0; }
+		} else if (arg == "--") {
+			// Everything after `--` is the verbatim command line
+			for (int j = i + 1; j < argc; j++) {
+				if (j > i + 1) command += " ";
+				command += argv[j];
+			}
+			break;
+		}
+	}
+
+	// Never disrupt the prompt: silently skip if there's nothing meaningful to record
+	if (command.empty() or directory.empty())
+		return 0;
+
+	db.get_commands_table().log(command, directory, exit_code);
+	return 0;
+}
+
+// Wrap a string in single quotes for safe `eval` in the sp() shell wrapper, escaping any
+// embedded single quotes as '\''.
+static std::string shell_single_quote(const std::string& s) {
+	std::string out = "'";
+	for (char c : s) {
+		if (c == '\'') out += "'\\''";
+		else out += c;
+	}
+	out += "'";
+	return out;
 }
 
 int Handler::Subcommands::handle_re_build(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags) {
@@ -328,6 +427,23 @@ sp-binary --enter sp refresh &> /dev/null & disown
 )";
 	}
 
+	// Command recorder: log each command + the directory it ran in (for `sp recall`).
+	if (zshrc_content.find("Sprite command recorder") == std::string::npos) {
+		append_block += R"(
+# Sprite command recorder
+autoload -Uz add-zsh-hook
+_sprite_preexec() { _SPRITE_CMD="$1"; _SPRITE_DIR="$PWD"; }
+_sprite_precmd() {
+  local _sprite_exit=$?
+  [[ -n "$_SPRITE_CMD" ]] && \
+    sp-binary --log --dir "$_SPRITE_DIR" --exit "$_sprite_exit" -- "$_SPRITE_CMD" &> /dev/null &|
+  unset _SPRITE_CMD
+}
+add-zsh-hook preexec _sprite_preexec
+add-zsh-hook precmd  _sprite_precmd
+)";
+	}
+
 	if (!append_block.empty()) {
 		std::ofstream out(zshrc_path, std::ios::app);
 		if (!out.is_open()) {
@@ -430,6 +546,53 @@ int Handler::Subcommands::handle_show(Handler& handler, std::vector<std::string>
 	else {
 		std::cerr << "Shortcut " << shortcut << " not found" << std::endl;
 		return 1;
+	}
+
+	return 0;
+}
+
+
+int Handler::Subcommands::handle_recall(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags) {
+	RecallArgs ra = parse_recall_args(commands, 1);
+	const int limit = handler.db.get_config().get_max_results();
+
+	std::vector<std::string> matches;
+	std::string scope_label;
+	bool list = ra.list;
+
+	if (ra.shortcuts) {
+		// Sprite-specific: search shortcut command text (e.g. "every shortcut that uses cd").
+		// A "shortcut | command" line isn't runnable, so always show these rather than execute.
+		matches = handler.db.get_shortcuts_table().search_commands(ra.terms, limit);
+		list = true;
+	} else {
+		std::string directory = ra.all ? "" : recall_resolve_dir(handler.db, ra.in_value);
+		scope_label = directory;
+		matches = handler.db.get_commands_table().recall(ra.terms, directory, ra.all, limit);
+	}
+
+	if (matches.empty()) {
+		std::string query;
+		for (size_t i = 0; i < ra.terms.size(); i++) {
+			if (i > 0) query += " ";
+			query += ra.terms[i];
+		}
+		std::string message = "sp: no recalled command";
+		if (not query.empty()) message += " matching '" + query + "'";
+		if (not ra.all and not scope_label.empty()) message += " in " + scope_label;
+		std::cout << "echo " << shell_single_quote(message) << std::endl;
+		return 1;
+	}
+
+	if (list) {
+		// Print every candidate (literally, for inspection) rather than running anything
+		for (const auto& match : matches)
+			std::cout << "echo " << shell_single_quote(match) << std::endl;
+	} else {
+		// Quick-recall: paste the best match onto the prompt (zsh's `print -z`) so it appears
+		// pre-filled and ready to run — pressing Enter again executes it. Nothing runs
+		// automatically. (Tab first if you'd rather browse and pick a different match.)
+		std::cout << "print -z -- " << shell_single_quote(matches[0]) << std::endl;
 	}
 
 	return 0;

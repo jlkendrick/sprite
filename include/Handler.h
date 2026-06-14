@@ -10,6 +10,7 @@ public:
 
 	int handle_tab(int argc, char* argv[]);
 	int handle_enter(std::vector<std::string>& commands, std::vector<Flag>& flags);
+	int handle_log(int argc, char* argv[]);
 
 	struct Subcommands {
 		static int handle_re_build(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags);
@@ -20,6 +21,7 @@ public:
 		static int handle_delete(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags);
 		static int handle_list(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags);
 		static int handle_show(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags);
+		static int handle_recall(Handler& handler, std::vector<std::string>& commands, std::vector<Flag>& flags);
 	};
 
 	

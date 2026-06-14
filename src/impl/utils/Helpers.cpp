@@ -159,6 +159,14 @@ std::tuple<bool, std::vector<std::string>, std::vector<Flag>> ArgParsing::proces
 		return {true, cmd_parts, flags};
 	}
 
+	// `recall` takes a free-form query (whole shell commands, which carry their own flags), so
+	// pass everything through untouched. handle_recall parses --in/--all/--list/--shortcuts itself.
+	if (first_arg == "recall") {
+		for (int i = 3; i < argc; i++)
+			cmd_parts.push_back(argv[i]);
+		return {true, cmd_parts, flags};
+	}
+
 
 
 	// Start from index 3 to skip the program name, call type (--enter or --tab), and "sp"

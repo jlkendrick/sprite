@@ -151,6 +151,25 @@ if ! grep -q "# Sprite automatic refresh on boot" "$ZSHRC"; then
   echo "✅ Added automatic refresh on boot to $ZSHRC"
 fi
 
+# Add command recorder hook (logs each command + its directory, for `sp recall`)
+if ! grep -q "# Sprite command recorder" "$ZSHRC"; then
+  cat << 'EOF' >> "$ZSHRC"
+
+# Sprite command recorder
+autoload -Uz add-zsh-hook
+_sprite_preexec() { _SPRITE_CMD="$1"; _SPRITE_DIR="$PWD"; }
+_sprite_precmd() {
+  local _sprite_exit=$?
+  [[ -n "$_SPRITE_CMD" ]] && \
+    sp-binary --log --dir "$_SPRITE_DIR" --exit "$_sprite_exit" -- "$_SPRITE_CMD" &> /dev/null &|
+  unset _SPRITE_CMD
+}
+add-zsh-hook preexec _sprite_preexec
+add-zsh-hook precmd  _sprite_precmd
+EOF
+  echo "✅ Added command recorder to $ZSHRC"
+fi
+
 # Add PATH to .zshrc
 if ! grep -q "# Add ~/.local/bin to PATH" "$HOME/.zshrc"; then
   {

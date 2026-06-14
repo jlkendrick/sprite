@@ -26,6 +26,12 @@ int main(int argc, char* argv[]) {
 		return handler.handle_tab(argc, argv);
 	}
 
+	// Record a command run by the shell recorder hook. Parsed directly (not via process_args)
+	// because the logged command text may contain arbitrary flags of its own.
+	if (call_type == "--log") {
+		return handler.handle_log(argc, argv);
+	}
+
 	// Direct subcommand invocation (e.g. `sp-binary init`) — used before the sp() shell function
 	// is available. Synthesize the `--enter sp` prefix so process_args sees the expected structure.
 	std::vector<std::string> wrapped_storage;

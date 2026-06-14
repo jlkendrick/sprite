@@ -29,6 +29,12 @@
 		to a different directory. Instead, we assume that the user intention is to simply 'cd' into 'Code/Projects/sprite'
 	- Not sure if we should do this one, maybe just rely on 'cd' for this
 13. Provide flags that can be provided in the command line to override the current configurations for only that command.
+14. (done) Command recall: a zsh preexec/precmd hook logs every command + the directory it ran in, and
+	`sp recall <query> [--in <dir>] [--all] [--list] [--shortcuts]` fuzzy-searches them (recency/frequency
+	ranked). UX mirrors navigation: Tab pops up the matching commands as a completion menu, Enter pastes the
+	best match onto the prompt via `print -z` (Enter again runs it — never auto-executes). recall is passed
+	through raw (like the shell-command passthrough) so candidate commands keep their own flags. Backed by
+	the new `commands` table.
 
 --------------------------------------------------------- NOTES ------------------------------------------------------
 Arguments that can be passed to the program:

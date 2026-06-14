@@ -1,6 +1,8 @@
 #include "tables/Shortcuts.h"
 #include "Database.h"
 
+#include <cctype>
+
 
 void ShortcutsTable::create_table() const {
 	try {
@@ -84,6 +86,36 @@ std::vector<std::string> ShortcutsTable::select_all_shortcuts() const {
 		std::cerr << "Error listing shortcuts from database: " << e.what() << std::endl;
 	}
 	return shortcuts;
+}
+
+
+std::vector<std::string> ShortcutsTable::search_commands(const std::vector<std::string>& terms, int limit) const {
+	// The shortcuts table is tiny, so scan it and filter in C++ (case-insensitive substring,
+	// AND across terms) rather than building dynamic SQL.
+	auto to_lower = [](std::string s) {
+		for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+		return s;
+	};
+	std::vector<std::string> lowered_terms;
+	for (const auto& t : terms) lowered_terms.push_back(to_lower(t));
+
+	std::vector<std::string> results;
+	try {
+		db << "SELECT shortcut, command FROM shortcuts ORDER BY shortcut;"
+		   >> [&](std::string shortcut, std::string command) {
+			if (static_cast<int>(results.size()) >= limit)
+				return;
+			std::string haystack = to_lower(command);
+			for (const auto& term : lowered_terms) {
+				if (haystack.find(term) == std::string::npos)
+					return;
+			}
+			results.push_back(shortcut + " | " + command);
+		};
+	} catch (const sqlite::sqlite_exception& e) {
+		std::cerr << "Error searching shortcuts: " << e.what() << std::endl;
+	}
+	return results;
 }
 
 

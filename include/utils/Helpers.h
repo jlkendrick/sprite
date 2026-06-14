@@ -62,7 +62,7 @@ namespace ArgParsing {
 		{"--", "--[bypass]"}
 	};
 	// First token after "sp": if it matches here, argv is passed through without Sprite flag parsing
-	// (e.g. cp -r, rm -rf). Omit Sprite subcommands: build, rebuild, refresh, install, add, delete, list, show.
+	// (e.g. cp -r, rm -rf). Omit Sprite subcommands: build, rebuild, refresh, install, add, delete, list, show, recall.
 	static const std::unordered_set<std::string> system_shell_commands = {
 		"awk", "bash", "brew", "bun", "bunx", "cat", "cd", "chflags", "chmod", "chown", "cp", "curl", "cut",
 		"date", "dd", "diff", "dig", "dirname", "diskutil", "docker", "du", "ed", "env", "ex", "false", "fd",

@@ -4,6 +4,7 @@
 #include "Config.h"
 #include "tables/Paths.h"
 #include "tables/Shortcuts.h"
+#include "tables/Commands.h"
 
 #include <sqlite_modern_cpp.h>
 
@@ -19,6 +20,7 @@ public:
 	const Config& get_config() const { return config; }
 	PathsTable& get_paths_table() { return paths_table; }
 	ShortcutsTable& get_shortcuts_table() { return shortcuts_table; }
+	CommandsTable& get_commands_table() { return commands_table; }
 
 	auto operator<<(const std::string& sql) { return db << sql; }
 
@@ -28,6 +30,7 @@ private:
 	const Config& config;
 	PathsTable paths_table;
 	ShortcutsTable shortcuts_table;
+	CommandsTable commands_table;
 };
 
 #endif // DATABASE_H
