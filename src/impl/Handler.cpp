@@ -21,7 +21,7 @@ int Handler::handle_tab(int argc, char* argv[]) {
 
 	// Check if we need to do lazy, in-memory file completion
 	// Our heurisitc is if the last char in the partial path is a '/'
-	if (partial.back() == '/') {
+	if (not partial.empty() and partial.back() == '/') {
 		// Lazy, in-memory file completion
 		std::vector<std::string> matches = db.get_paths_table().collect_files(partial);
 		for (const auto& match : matches)
@@ -29,20 +29,11 @@ int Handler::handle_tab(int argc, char* argv[]) {
 		return 0;
 	}
 	
-	// Get matches for the partial path
+	// Get matches for the partial path and print them for zsh completion
 	std::vector<std::string> matches = db.get_paths_table().query(partial);
-	
-	// Check if there are commands/inputs between "sp" and the partial path
-	std::string prefix = "";
-	for (int i = 3; i < argc - 1; i++) {
-		if (i > 3) prefix += " ";
-		prefix += argv[i];
-	}
-
-	// Print the matches with appropriate prefixes for zsh completion
 	for (const auto& match : matches)
 		std::cout << match << std::endl;
-	
+
 	return 0;
 }
 
@@ -89,11 +80,6 @@ int Handler::handle_enter(std::vector<std::string>& commands, std::vector<Flag>&
 	std::vector<std::string> matches = db.get_shortcuts_table().query(first_token);
 	std::string command = matches.empty() ? "" : matches[0];
 	if (not command.empty()) {
-		// Build the arguments for the shortcut
-		std::string args = "";
-		for (size_t i = 1; i < commands.size() - 1; i++)
-			args += " " + commands[i];
-
 		// Try to complete the last command as a path
 		std::string last_token = commands.size() > 1 ? commands.back() : "";
 		if (not last_token.empty() and 
@@ -378,11 +364,6 @@ int Handler::Subcommands::handle_add(Handler& handler, std::vector<std::string>&
 
 	std::string shortcut = commands[1];
 	std::string command = commands[2];
-	// std::string command = "";
-	// for (size_t i = 2; i < commands.size(); i++) {
-	// 	if (i > 2) command += " ";
-	// 	command += commands[i];
-	// }
 	// Add the pair to the database
 	handler.db.get_shortcuts_table().add_shortcut(shortcut, command);
 

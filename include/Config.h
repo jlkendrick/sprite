@@ -18,7 +18,6 @@ public:
 	const json& get_config() const { return config; }
 	std::string get_init_path() const { return config["paths"]["init"].get<std::string>(); }
 	std::string get_db_path() const { return config["paths"]["db"].get<std::string>(); }
-	std::string get_history_path() const { return config["paths"]["history"].get<std::string>(); }
 	int get_max_results() const { return config["matching"]["max_results"].get<int>(); }
 	int get_max_history_size() const { return config["matching"]["max_history_size"].get<int>(); }
 	MatchingType get_matching_type() const { return TypeConversions::s_to_matching_type(config["matching"]["type"].get<std::string>()); }
@@ -33,7 +32,6 @@ public:
 	void set_config(const json& user_config) { config = user_config; }
 	void set_init_path(const std::string& init_path) { config["paths"]["init"] = init_path; }
 	void set_db_path(const std::string& db_path) { config["paths"]["db"] = db_path; }
-	void set_history_path(const std::string& history_path) { config["paths"]["history"] = history_path; }
 	void set_max_results(int max_results) { config["matching"]["max_results"] = max_results; }
 	void set_max_history_size(int max_history_size) { config["matching"]["max_history_size"] = max_history_size; }
 	void set_matching_type(const std::string& matching_type) { config["matching"]["type"] = matching_type; }

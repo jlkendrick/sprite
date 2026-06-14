@@ -68,7 +68,6 @@ set(SPRITE_SOURCES
 	src/impl/tables/Paths.cpp
 	src/impl/tables/Shortcuts.cpp
 	src/impl/utils/Helpers.cpp
- 	src/impl/utils/Types.cpp
 )
 add_library(sprite_lib ${SPRITE_SOURCES})
 target_include_directories(sprite_lib PUBLIC
