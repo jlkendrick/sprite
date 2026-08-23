@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "landing/**"
+      - "docs/install.sh"
+      - ".github/workflows/deploy-landing.yml"
   workflow_dispatch:
 
 permissions:
@@ -26,6 +28,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/configure-pages@v5
+
+      # Serve the installer alongside the landing page so the documented
+      # `curl -fsSL https://jlkendrick.github.io/sprite/docs/install.sh | bash`
+      # resolves. Only landing/ is uploaded, so docs/ has to be staged into it.
+      - name: Stage install script
+        run: |
+          mkdir -p landing/docs
+          cp docs/install.sh landing/docs/install.sh
 
       - uses: actions/upload-pages-artifact@v3
         with:
